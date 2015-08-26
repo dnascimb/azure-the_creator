@@ -1,0 +1,14 @@
+{
+  "newStorageAccountName": {
+    "value": "djnstorage001"
+  },
+  "adminUsername": {
+    "value": "dan"
+  },
+  "adminPassword": {
+    "value": "Kontiki10!"
+  },
+  "dnsNameForPublicIP": {
+    "value": "djnsimplevm001"
+  }
+}
