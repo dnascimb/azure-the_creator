@@ -1,5 +1,5 @@
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: This module's purpose is to delete a previously created resource group
+:: This module's purpose is to delete a previously created resource group with a name matching the parameter
 ::
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: C:\github\azure-the_creator>azure group delete -h
@@ -15,4 +15,4 @@
 :: help:      -q, --quiet                    quiet mode (do not ask for delete confirmation)
 :: help:      --subscription <subscription>  the subscription identifier
 
-azure group delete -q --json -n "djnSimpleMachineTest"
+azure group delete -q --json -n "%1"
