@@ -13,7 +13,7 @@ Instructions:
 - Install Flask
 - Install Redis
 - Run the web services
-	- $ python webservices.py
+	- python webservices.py
 	- try http://localhost:5000/create
 - (Optional) Setup service on the machine that executes 'python reapor.py' every 1 min
 
@@ -22,8 +22,10 @@ Usage
 ----------------
 
 **POST** http://URL/create
+
 Creates a resource group with a 30min TTL
 
 
-**DELETE** http://URL/delete/<machine_name>
+**DELETE** http://URL/delete/*machine-name*
+
 Deletes a resource group
