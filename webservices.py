@@ -9,6 +9,13 @@ import subprocess
 app = Flask(__name__)
 
 #
+#
+#
+@app.route("/", methods=['GET'])
+def greetings():
+	return "The Creator"
+
+#
 # Generates a unique name, creates Azure resources with the name, and audits the event
 #
 @app.route("/resources", methods=['POST'])

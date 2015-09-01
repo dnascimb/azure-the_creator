@@ -14,7 +14,7 @@ Instructions:
 - Install Redis
 - Run the web services
 	- python webservices.py
-	- try http://localhost:5000/create
+	- try http://localhost:5000/
 - (Optional) Setup service on the machine that executes 'python reapor.py' every 1 min
 
 
