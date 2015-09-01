@@ -1,9 +1,9 @@
 from flask import Flask
 from datetime import datetime, timedelta
 import uuid
-import json
 import redis
 import sys
+import json
 import subprocess
 
 app = Flask(__name__)
@@ -27,7 +27,7 @@ def create():
 		output = process.communicate()[0]
 
 		r = redis.StrictRedis(host='localhost', port=6379, db=0)
-		r.set(randName, data)
+		r.set(randName, json.dumps(data))
 		print(r.get(randName));
 	except:
 		e = sys.exc_info()
