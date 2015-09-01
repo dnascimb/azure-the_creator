@@ -21,11 +21,7 @@ Instructions:
 Usage
 ----------------
 
-**POST** http://URL/create
-
-Creates a resource group with a 30min TTL
-
-
-**DELETE** http://URL/delete/*machine-name*
-
-Deletes a resource group
+| Method        | URL                                            | Purpose  |
+| ------------- | ---------------------------------------------- | -------- |
+| POST          | http://localhost:5000/resources                | Creates a resource with 30min TTL |
+| DELETE        | http://localhost:5000/resources/*machine-name* | Deletes a resource |

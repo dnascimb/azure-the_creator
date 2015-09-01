@@ -11,7 +11,7 @@ app = Flask(__name__)
 #
 # Generates a unique name, creates Azure resources with the name, and audits the event
 #
-@app.route("/create")
+@app.route("/resources", methods=['POST'])
 def create():
 	randName = str(uuid.uuid4()) # generate unique name for the resources
 	bashCommand = "create.bat " + randName
@@ -37,7 +37,7 @@ def create():
 	
 	return output
 
-@app.route("/delete/<machine>")
+@app.route("/resources/<machine>", methods=['DELETE'])
 def delete(machine):
 	bashCommand = "delete.bat " + machine
 	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, cwd='c:/github/azure-the_creator/')
