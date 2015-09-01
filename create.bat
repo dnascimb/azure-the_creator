@@ -5,4 +5,4 @@
 :: create.bat K83jd-ke83hf-kE308-23Zlsie-03kd1
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-azure group create "%1" "West US" -f azuredeploy.json -d "testDeploy" -e azuredeploy.parameters.json
+azure group create --json "%1" "West US" -f azuredeploy.json -d "testDeploy" -e azuredeploy.parameters.json
