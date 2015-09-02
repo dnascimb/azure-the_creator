@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="">
+    <title>Page 2</title>
+
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+   </head>   
+  <body>
+    
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Kollective Visualizer</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+      <div class="container">
+        <h1>Hi <span id="contact_name"></span></h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc nec quam orci. Integer convallis, felis ac vestibulum ornare, risus felis ullamcorper sem, eu hendrerit turpis eros sit amet lorem. Etiam vehicula justo massa, a porta eros gravida ut. Nam blandit turpis iaculis, sodales magna at, pellentesque dui. Aenean commodo, mi quis cursus egestas, risus velit laoreet erat, quis auctor ante dui ut arcu. Sed eros ante, feugiat eget semper nec, suscipit ut lectus. Nulla bibendum mauris ut lobortis venenatis.
+        </p>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-md-11">
+          <p>Nulla imperdiet turpis purus, sed commodo diam interdum nec. Sed eget mi malesuada, facilisis ligula at, sagittis dui. Vestibulum fringilla ligula a augue commodo tristique. Phasellus sit amet eros id ligula finibus pharetra.</p>
+          <ul>
+          <li>Donec mattis urna eu ante bibendum tempor.</li>
+          <li>Nulla porta ex quis ante mollis ullamcorper.</li>
+          <li>Nunc eu dolor molestie, dictum ipsum suscipit, volutpat lacus.</li>
+          <li>Fusce vitae nisi a justo dignissim tempus.</li>
+          <li>Phasellus sit amet orci tristique, sollicitudin nunc tempus, iaculis erat.</li>
+          </ul>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/qTwje_60doQ" frameborder="0" allowfullscreen></iframe>
+          <br>
+          <br>
+          <p><span id="rdp_session_info"></span></p>
+        </div>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; Kollective 2015</p>
+      </footer>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    
+    <script>
+      // snippet to get URL parameters
+      $.urlParam = function(name){
+          var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+          if (results==null){
+             return null;
+          }
+          else{
+             return results[1] || 0;
+          }
+      }
+
+      // get values from the URL and decode
+      contact_name = decodeURIComponent($.urlParam('inputContactName').replace(/\+/g, '%20'));
+      if($.trim(contact_name) != '')
+        $("#contact_name").text(contact_name);
+
+      // get the RDP information
+      //var rdp = $.post("http://localhost:5000/resources", { participants: 3 } );
+      var rdp = $.ajax({
+        type: "GET",
+        dataType: "jsonp",
+        url: "http://urls.api.twitter.com/1/urls/count.json?url=bendtech.com"
+      });
+      // Put the results in a div
+      rdp.done(function( data ) {
+        var content = data;
+       // $( "#rdp_session_info" ).empty().text( content[''] );
+       $( "#rdp_session_info" ).empty().text( content['count'] );
+      });
+
+      // go to PAGE 3 after specific amount of time
+      setInterval(function () {window.location.href = 'page3.html';}, 15000);
+    </script>
+  </body>
+</html>
