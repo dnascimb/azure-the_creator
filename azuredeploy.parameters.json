@@ -1,6 +1,12 @@
 {
-  "newStorageAccountName": {
-    "value": "djnstorage001"
+  "location": {
+    "value": "West US"
+  },
+  "storageAccount": {
+    "value": "djnstorage002"
+  },
+  "publicDnsName": {
+    "value": "djnsimplevmwithrdp"
   },
   "adminUsername": {
     "value": "dan"
@@ -8,7 +14,7 @@
   "adminPassword": {
     "value": "Kontiki10!"
   },
-  "dnsNameForPublicIP": {
-    "value": "djnsimplevm001"
+  "rdpPort": {
+    "value": 50001
   }
 }
