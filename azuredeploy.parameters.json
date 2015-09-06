@@ -5,8 +5,23 @@
   "storageAccount": {
     "value": "djnstorage002"
   },
-  "publicDnsName": {
-    "value": "djnsimplevmwithrdp"
+  "publicDnsName1": {
+    "value": "djnsimplevmwithrdp1"
+  },
+  "publicDnsName2": {
+    "value": "djnsimplevmwithrdp2"
+  },
+  "publicDnsName3": {
+    "value": "djnsimplevmwithrdp3"
+  },
+  "vmName1": {
+    "value": "vm1"
+  },
+    "vmName2": {
+    "value": "vm2"
+  },
+  "vmName3": {
+    "value": "vm3"
   },
   "adminUsername": {
     "value": "dan"
