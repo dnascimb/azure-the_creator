@@ -12,7 +12,7 @@ app = Flask(__name__)
 
 # setup logging
 logging.basicConfig(level=logging.INFO)
-log = logging.getLogger('reapor')
+log = logging.getLogger('creator')
 LOG_FILENAME = 'the_creator.log'
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler = logging.handlers.RotatingFileHandler(LOG_FILENAME,
@@ -37,7 +37,7 @@ def create():
 	randName = str(uuid.uuid4()) # generate unique name for the resources
 	bashCommand = "create.bat " + randName
 	data = {
-		'name' : randName,
+		'resource_group_name' : randName,
    		'created_at' : ''+datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3],
    		'ttl' : ''+(datetime.utcnow() + timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
 	}
@@ -46,18 +46,21 @@ def create():
 	try:
 		process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, cwd='c:/github/azure-the_creator/')
 		output = process.communicate()[0]
-
-		r = redis.StrictRedis(host='localhost', port=6379, db=0)
-		r.set(randName, json.dumps(data))
-		log.info("created resource " + str(r.get(randName)));
+		str_output = output.decode('UTF-8')
+		log.info("result of running azure cli:" + str_output)
+		if('Succeeded' in str_output):
+			r = redis.StrictRedis(host='localhost', port=6379, db=0)
+			r.set(randName, json.dumps(data))
+			log.info("created resource " + str(r.get(randName)));
+		else:
+			log.error("Resource Group creation did not return success")
+			return json.dumps({'status':'errored'})
 	except:
 		e = sys.exc_info()
 		log.error(e)
 		return e
-
-	# hand back the details about the resource
-	result = data
 	
+#	return str_output
 	return json.dumps(data)
 
 
