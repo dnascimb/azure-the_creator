@@ -13,7 +13,7 @@ app = Flask(__name__)
 # setup logging
 logging.basicConfig(level=logging.INFO)
 log = logging.getLogger('creator')
-LOG_FILENAME = 'the_creator.log'
+LOG_FILENAME = 'creator.log'
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 handler = logging.handlers.RotatingFileHandler(LOG_FILENAME,
                                                maxBytes=2000000,
