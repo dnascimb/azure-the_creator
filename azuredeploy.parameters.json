@@ -3,7 +3,7 @@
     "value": "West US"
   },
   "storageAccount": {
-    "value": "djnstorage002"
+    "value": "creatorstorage"
   },
   "publicDnsName1": {
     "value": "djnsimplevmwithrdp1"

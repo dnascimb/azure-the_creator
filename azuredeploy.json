@@ -106,13 +106,16 @@
     "vnetAddressRange": "10.0.0.0/16",
     "subnetAddressRange": "10.0.0.0/24",
     "subnetName": "Subnet",
-    "subnet-id": "[concat(resourceId('Microsoft.Network/virtualNetworks','VNET'),'/subnets/',variables('subnetName'))]"
+    "subnet-id": "[concat(resourceId('Microsoft.Network/virtualNetworks','VNET'),'/subnets/',variables('subnetName'))]",
+    "pubIp1": "[concat('pubIp',parameters('publicDnsName1'),'')]",
+    "pubIp2": "[concat('pubIp',parameters('publicDnsName2'),'')]",
+    "pubIp3": "[concat('pubIp',parameters('publicDnsName3'),'')]"
   },
   "resources": [
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "publicIp1",
+      "name": "[variables('pubIp1')]",
       "location": "[parameters('location')]",
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -124,7 +127,7 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "publicIp2",
+      "name": "[variables('pubIp2')]",
       "location": "[parameters('location')]",
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
@@ -136,22 +139,13 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Network/publicIPAddresses",
-      "name": "publicIp3",
+      "name": "[variables('pubIp3')]",
       "location": "[parameters('location')]",
       "properties": {
         "publicIPAllocationMethod": "Dynamic",
         "dnsSettings": {
           "domainNameLabel": "[parameters('publicDnsName3')]"
         }
-      }
-    },
-    {
-      "apiVersion": "2015-05-01-preview",
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[parameters('storageAccount')]",
-      "location": "[parameters('location')]",
-      "properties": {
-        "accountType": "Standard_LRS"
       }
     },
     {
@@ -181,7 +175,7 @@
       "type": "Microsoft.Network/loadBalancers",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "Microsoft.Network/publicIPAddresses/publicIp1"
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('pubIp1'))]"
       ],
       "properties": {
         "frontendIPConfigurations": [
@@ -189,7 +183,7 @@
             "name": "LBFE",
             "properties": {
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses','publicIp1')]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pubIp1'))]"
               }
             }
           }
@@ -221,7 +215,7 @@
       "type": "Microsoft.Network/loadBalancers",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "Microsoft.Network/publicIPAddresses/publicIp2"
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('pubIp2'))]"
       ],
       "properties": {
         "frontendIPConfigurations": [
@@ -229,7 +223,7 @@
             "name": "LBFE",
             "properties": {
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses','publicIp2')]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pubIp2'))]"
               }
             }
           }
@@ -261,7 +255,7 @@
       "type": "Microsoft.Network/loadBalancers",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "Microsoft.Network/publicIPAddresses/publicIp3"
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('pubIp3'))]"
       ],
       "properties": {
         "frontendIPConfigurations": [
@@ -269,7 +263,7 @@
             "name": "LBFE",
             "properties": {
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses','publicIp3')]"
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pubIp3'))]"
               }
             }
           }
@@ -397,10 +391,9 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "vm1",
+      "name": "[parameters('vmName1')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts',parameters('storageAccount'))]",
         "[concat('Microsoft.Network/networkInterfaces/',parameters('vmName1'),'-nif')]"
       ],
       "properties": {
@@ -413,14 +406,12 @@
           "adminPassword": "[parameters('adminPassword')]"
         },
         "storageProfile": {
-          "imageReference": {
-            "publisher": "[parameters('imagePublisher')]",
-            "offer": "[parameters('imageOffer')]",
-            "sku": "[parameters('imageSku')]",
-            "version": "latest"
-          },
           "osDisk": {
+            "osType": "Windows",
             "name": "osdisk",
+            "image": {
+              "uri": "http://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-osDisk.6d8148a5-0dda-4a82-8362-a83d65aaa43a.vhd"
+            },
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net/vhds/',parameters('vmName1'),'-osdisk.vhd')]"
             },
@@ -440,10 +431,9 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "vm2",
+      "name": "[parameters('vmName2')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts',parameters('storageAccount'))]",
         "[concat('Microsoft.Network/networkInterfaces/',parameters('vmName2'),'-nif')]"
       ],
       "properties": {
@@ -456,14 +446,12 @@
           "adminPassword": "[parameters('adminPassword')]"
         },
         "storageProfile": {
-          "imageReference": {
-            "publisher": "[parameters('imagePublisher')]",
-            "offer": "[parameters('imageOffer')]",
-            "sku": "[parameters('imageSku')]",
-            "version": "latest"
-          },
           "osDisk": {
+            "osType": "Windows",
             "name": "osdisk",
+            "image": {
+              "uri": "http://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-osDisk.6d8148a5-0dda-4a82-8362-a83d65aaa43a.vhd"
+            },
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net/vhds/',parameters('vmName2'),'-osdisk.vhd')]"
             },
@@ -483,10 +471,9 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "vm3",
+      "name": "[parameters('vmName3')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts',parameters('storageAccount'))]",
         "[concat('Microsoft.Network/networkInterfaces/',parameters('vmName3'),'-nif')]"
       ],
       "properties": {
@@ -499,14 +486,12 @@
           "adminPassword": "[parameters('adminPassword')]"
         },
         "storageProfile": {
-          "imageReference": {
-            "publisher": "[parameters('imagePublisher')]",
-            "offer": "[parameters('imageOffer')]",
-            "sku": "[parameters('imageSku')]",
-            "version": "latest"
-          },
           "osDisk": {
+            "osType": "Windows",
             "name": "osdisk",
+            "image": {
+              "uri": "http://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-osDisk.6d8148a5-0dda-4a82-8362-a83d65aaa43a.vhd"
+            },
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net/vhds/',parameters('vmName3'),'-osdisk.vhd')]"
             },
