@@ -89,35 +89,48 @@ def create():
 #
 @app.route("/resources/<kuuid>", methods=['GET'])
 def getResourceDetails(kuuid):
+	result = {}
 
 	#ensure resource exists in Redis
+	r = redis.StrictRedis(host='localhost', port=6379, db=0)
+	item = r.get(kuuid)
+	if not item:
+		log.info("getResourceDetails: " + str(item) + " does not exist")
+		abort(404)
+
+	log.info("getResourceDetails: retrieved " + str(item) + " successfully")
 
 	#retrieve resource group deploy log via azure
 	# ex. azure group log show "629340b2-7447-4737-9143-9a7ba79eaa4f" --last-deployment
+	bashCommand = "get_resource_log.bat " + kuuid
+	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, cwd='c:/github/azure-the_creator/')
+	output = process.communicate()[0]
+	str_output = output.decode('UTF-8')
 
 	#parse the results and determine how many components have not finished yet
+	#node = locateByName(str_output, 'status')
+	#print node['value']
 
-	#calculate a percentage or failure to return
-
+	#calculate a percentage or failure to return;
 	return json.dumps({ 
 	  "status" : "Deployed", 
 	  "progress" : "100%",
 	  "hosts" : 
       [
       {
- 		"hostname" : "kvm1-c17b4936-dc69-42a0-9884-6da583de6af3.westus.cloudapp.azure.com:50001", 
- 		"username" : "user1", 
- 		"password" : "Ije83bfNZxuie2"
+ 		"hostname" : "kvm1-" + kuuid + ":50001", 
+ 		"username" : "kuser", 
+ 		"password" : "83GHd1kld803"
  	  },
  	  {
- 		"hostname" : "kvm2-c17b4936-dc69-42a0-9884-6da583de6af3.westus.cloudapp.azure.com:50001", 
- 		"username" : "user2", 
- 		"password" : "v83bgI39E83bi3"
+ 		"hostname" : "kvm2-" + kuuid + ":50001", 
+ 		"username" : "kuser", 
+ 		"password" : "83GHd1kld803"
  	  },
  	  {
- 		"hostname" : "kvm1-c17b4936-dc69-42a0-9884-6da583de6af3.westus.cloudapp.azure.com:50001", 
- 		"username" : "user3", 
- 		"password" : "KNe38bf983hs21"
+ 		"hostname" : "kvm3-" + kuuid + ":50001", 
+ 		"username" : "kuser", 
+ 		"password" : "83GHd1kld803"
  	  },
  	  ]
  	})
@@ -131,6 +144,21 @@ def delete(kuuid):
 	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, cwd='c:/github/azure-the_creator/')
 	output = process.communicate()[0]
 	return output
+
+#
+# Function to recursively tree-search until a name is found
+#
+def locateByName(e,name):
+    if e.get('name',None) == name:
+        return e
+
+    for child in e.get('children',[]):
+        result = locateByName(child,name)
+        if result is not None:
+            return result
+
+    return None
+
 
 
 if __name__ == "__main__":
