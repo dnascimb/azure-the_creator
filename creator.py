@@ -38,7 +38,7 @@ def create():
 	reapor_data = {
 		'resource_group_name' : randName,
    		'created_at' : ''+datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3],
-   		'ttl' : ''+(datetime.utcnow() + timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
+   		'ttl' : ''+(datetime.utcnow() + timedelta(minutes=60)).strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
 	}
 
 	#create resources and save audit to redis
