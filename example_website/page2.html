@@ -36,7 +36,7 @@
     <!-- Main jumbotron for a primary marketing message or call to action -->
     <div class="jumbotron">
       <div class="container">
-        <h1>Hi <span id="contact_name"></span></h1>
+        <h1>Hi</h1>
         <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc nec quam orci. Integer convallis, felis ac vestibulum ornare, risus felis ullamcorper sem, eu hendrerit turpis eros sit amet lorem. Etiam vehicula justo massa, a porta eros gravida ut. Nam blandit turpis iaculis, sodales magna at, pellentesque dui. Aenean commodo, mi quis cursus egestas, risus velit laoreet erat, quis auctor ante dui ut arcu. Sed eros ante, feugiat eget semper nec, suscipit ut lectus. Nulla bibendum mauris ut lobortis venenatis.
         </p>
       </div>
@@ -45,17 +45,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-11">
-          <p>Nulla imperdiet turpis purus, sed commodo diam interdum nec. Sed eget mi malesuada, facilisis ligula at, sagittis dui. Vestibulum fringilla ligula a augue commodo tristique. Phasellus sit amet eros id ligula finibus pharetra.</p>
-          <ul>
-          <li>Donec mattis urna eu ante bibendum tempor.</li>
-          <li>Nulla porta ex quis ante mollis ullamcorper.</li>
-          <li>Nunc eu dolor molestie, dictum ipsum suscipit, volutpat lacus.</li>
-          <li>Fusce vitae nisi a justo dignissim tempus.</li>
-          <li>Phasellus sit amet orci tristique, sollicitudin nunc tempus, iaculis erat.</li>
-          </ul>
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/qTwje_60doQ" frameborder="0" allowfullscreen></iframe>
-          <br>
-          <br>
+          
           <p><span id="rdp_session_info"></span></p>
         </div>
       </div>
@@ -72,38 +62,53 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     
     <script>
-      // snippet to get URL parameters
-      $.urlParam = function(name){
-          var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
-          if (results==null){
-             return null;
-          }
-          else{
-             return results[1] || 0;
-          }
+
+    //
+    // Makes a call to the creator service to spin up resources, then
+    // calls the creator service to check on the status until it returns
+    // connection information for the resources
+    //
+
+      // method gets called as a promise
+      function createResources() {
+        return $.ajax({
+          type: "POST",
+          dataType: "json",
+          url: 'http://127.0.0.1:5000/resources', 
+          data: {}
+        });
       }
 
-      // get values from the URL and decode
-      contact_name = decodeURIComponent($.urlParam('inputContactName').replace(/\+/g, '%20'));
-      if($.trim(contact_name) != '')
-        $("#contact_name").text(contact_name);
+      // call to create resources
+      createResources().done( function( name ) {
+        
+        // after the resources have been created, check the status until it returns deployment details
+        (function poll(){
+           setTimeout(function(){
+              $.ajax({ type: "GET", dataType: "json", url: "http://127.0.0.1:5000/resources/" + name["id"], success: function(data){
+                  if(data["status"] == "Deployed")
+                    $( "#rdp_session_info" ).empty().text( "host1: " + data["hosts"][0]["hostname"] + "\n" +
+                        "username: " + data["hosts"][0]["username"] + "\n" +
+                        "password: " + data["hosts"][0]["password"] + "\n\n" +
+                        "host2: " + data["hosts"][1]["hostname"] + "\n" +
+                        "username: " + data["hosts"][1]["username"] + "\n" +
+                        "password: " + data["hosts"][1]["password"] + "\n\n" +
+                        "host3: " + data["hosts"][2]["hostname"] + "\n" +
+                        "username: " + data["hosts"][2]["username"] + "\n" +
+                        "password: " + data["hosts"][2]["password"] + "\n" 
+                        
 
-      // get the RDP information
-      //var rdp = $.post("http://localhost:5000/resources", { participants: 3 } );
-      var rdp = $.ajax({
-        type: "GET",
-        dataType: "jsonp",
-        url: "http://urls.api.twitter.com/1/urls/count.json?url=bendtech.com"
-      });
-      // Put the results in a div
-      rdp.done(function( data ) {
-        var content = data;
-       // $( "#rdp_session_info" ).empty().text( content[''] );
-       $( "#rdp_session_info" ).empty().text( content['count'] );
+                     );
+                  else
+                    poll(); //Setup the next poll recursively
+
+              }, dataType: "json"});
+          }, 10000); //every ten seconds
+        })();
+
+
       });
 
-      // go to PAGE 3 after specific amount of time
-      setInterval(function () {window.location.href = 'page3.html';}, 15000);
     </script>
   </body>
 </html>

@@ -12,6 +12,10 @@ Instructions:
 - Install Python (v2 or v3)
 - Install Flask
 - Install Redis
+- Install Python Redis lib
+	- pip install redis
+- Install Flask CORS
+	- pip install -U flask-cors
 - Run the web services
 	- python creator.py
 	- try http://localhost:5000/
