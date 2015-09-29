@@ -410,7 +410,7 @@
             "osType": "Windows",
             "name": "osdisk",
             "image": {
-              "uri": "http://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-osDisk.6d8148a5-0dda-4a82-8362-a83d65aaa43a.vhd"
+              "uri": "http://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-osDisk.latest.vhd"
             },
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net/vhds/',parameters('vmName1'),'-osdisk.vhd')]"
@@ -450,7 +450,7 @@
             "osType": "Windows",
             "name": "osdisk",
             "image": {
-              "uri": "http://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-osDisk.6d8148a5-0dda-4a82-8362-a83d65aaa43a.vhd"
+              "uri": "http://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-osDisk.latest.vhd"
             },
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net/vhds/',parameters('vmName2'),'-osdisk.vhd')]"
@@ -490,7 +490,7 @@
             "osType": "Windows",
             "name": "osdisk",
             "image": {
-              "uri": "http://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-osDisk.6d8148a5-0dda-4a82-8362-a83d65aaa43a.vhd"
+              "uri": "http://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-osDisk.latest.vhd"
             },
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net/vhds/',parameters('vmName3'),'-osdisk.vhd')]"
