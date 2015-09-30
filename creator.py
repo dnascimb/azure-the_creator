@@ -166,17 +166,17 @@ def getResourceDetails(kuuid):
 	  "hosts" : 
       [
       {
- 		"hostname" : "kvm1-" + kuuid + ":50001", 
+ 		"hostname" : "kvm1-" + kuuid + ".westus.cloudapp.azure.com" + ":50001", 
  		"username" : "kuser", 
  		"password" : "83GHd1kld803"
  	  },
  	  {
- 		"hostname" : "kvm2-" + kuuid + ":50001", 
+ 		"hostname" : "kvm2-" + kuuid + ".westus.cloudapp.azure.com" + ":50001", 
  		"username" : "kuser", 
  		"password" : "83GHd1kld803"
  	  },
  	  {
- 		"hostname" : "kvm3-" + kuuid + ":50001", 
+ 		"hostname" : "kvm3-" + kuuid + ".westus.cloudapp.azure.com" + ":50001", 
  		"username" : "kuser", 
  		"password" : "83GHd1kld803"
  	  },
