@@ -26,6 +26,8 @@ handler = logging.handlers.RotatingFileHandler(LOG_FILENAME,
 handler.setFormatter(formatter)
 log.addHandler(handler)
 
+# Enable CORS for Flask
+# http://flask.pocoo.org/snippets/56/
 def crossdomain(origin=None, methods=None, headers=None,
                 max_age=21600, attach_to_all=True,
                 automatic_options=True):
@@ -83,6 +85,8 @@ def greetings():
 @cross_origin(origin='*',headers=['Content- Type','Authorization'])
 def create():
 	randName = str(uuid.uuid4()) # generate unique name for the resources
+	
+	# data structure we store in redis for TTL enforcement later
 	reapor_data = {
 		'resource_group_name' : randName,
    		'created_at' : ''+datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3],
@@ -91,7 +95,7 @@ def create():
 
 	#create resources and save audit to redis
 	try:
-		#generate random names for various configuration parameters
+		#create random names for various configuration parameters
 		param_file = open('azuredeploy.parameters.json', "r")    
 		data = json.load(param_file)
 		randName_condensed = randName.replace("-", "")
@@ -111,7 +115,7 @@ def create():
 
 		#invoke Azure deployment via Azure CLI
 		bashCommand = "create.bat " + randName + " " + output_filename
-		process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, cwd='c:/github/azure-the_creator/')
+		process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, cwd=app.root_path)
 		output = process.communicate()[0]
 		str_output = output.decode('UTF-8')
 		log.info("result of running azure cli:" + str_output)
@@ -151,15 +155,16 @@ def getResourceDetails(kuuid):
 	#retrieve resource group deploy log via azure
 	# ex. azure group log show "629340b2-7447-4737-9143-9a7ba79eaa4f" --last-deployment
 	bashCommand = "get_resource_log.bat " + kuuid
-	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, cwd='c:/github/azure-the_creator/')
+	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, cwd=app.root_path)
 	output = process.communicate()[0]
 	str_output = output.decode('UTF-8')
 
+	# TODO: 
 	#parse the results and determine how many components have not finished yet
-	#node = locateByName(str_output, 'status')
-	#print node['value']
-
 	#calculate a percentage or failure to return;
+
+	# FOR NOW:
+	# return just the unique names with hard coded information back to the requestor
 	return json.dumps({ 
 	  "status" : "Deployed", 
 	  "progress" : "100%",
@@ -189,24 +194,9 @@ def getResourceDetails(kuuid):
 @app.route("/resources/<kuuid>", methods=['DELETE'])
 def delete(kuuid):
 	bashCommand = "delete.bat " + kuuid
-	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, cwd='c:/github/azure-the_creator/')
+	process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE, cwd='app.root_path')
 	output = process.communicate()[0]
 	return output
-
-#
-# Function to recursively tree-search until a name is found
-#
-def locateByName(e,name):
-    if e.get('name',None) == name:
-        return e
-
-    for child in e.get('children',[]):
-        result = locateByName(child,name)
-        if result is not None:
-            return result
-
-    return None
-
 
 
 if __name__ == "__main__":
