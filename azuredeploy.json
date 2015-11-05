@@ -460,7 +460,7 @@
           }
         },
         "networkProfile": {
-          "networkInterfaces": [
+          "networkInterfaces": [ 
             {
               "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vmName2'),'-nif'))]"
             }
