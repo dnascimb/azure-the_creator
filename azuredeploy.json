@@ -410,7 +410,7 @@
             "osType": "Windows",
             "name": "osdisk",
             "image": {
-              "uri": "http://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-osDisk.9c435e55-a3a1-4976-b178-84916c7bf9bb.vhd"
+              "uri": "https://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-TestFlightPT-osDisk.b7376eae-61c2-41eb-a512-3d69eab44fcf.vhd"
             },
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net/vhds/',parameters('vmName1'),'-osdisk.vhd')]"
@@ -450,7 +450,7 @@
             "osType": "Windows",
             "name": "osdisk",
             "image": {
-              "uri": "http://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-osDisk.9c435e55-a3a1-4976-b178-84916c7bf9bb.vhd"
+              "uri": "https://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-TestFlightPT-osDisk.b7376eae-61c2-41eb-a512-3d69eab44fcf.vhd"
             },
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net/vhds/',parameters('vmName2'),'-osdisk.vhd')]"
@@ -490,7 +490,7 @@
             "osType": "Windows",
             "name": "osdisk",
             "image": {
-              "uri": "http://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-osDisk.9c435e55-a3a1-4976-b178-84916c7bf9bb.vhd"
+              "uri": "https://creatorstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/win2012R2D-TestFlightPT-osDisk.b7376eae-61c2-41eb-a512-3d69eab44fcf.vhd"
             },
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net/vhds/',parameters('vmName3'),'-osdisk.vhd')]"
