@@ -3,7 +3,7 @@
     "value": "West US"
   },
   "storageAccount": {
-    "value": "creatorstorage"
+    "value": "testflightdynamicstorage"
   },
   "publicDnsName1": {
     "value": "djnsimplevmwithrdp1"
@@ -27,7 +27,7 @@
     "value": "kuser-root"
   },
   "adminPassword": {
-    "value": "83GHd1kld803"
+    "value": "38Fd3jlc327"
   },
   "rdpPort": {
     "value": 50001

@@ -1,8 +1,8 @@
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-:: Retrieves the log for a resource group
+:: Retrieves the provisioning state for a resource group
 :: 
 :: Example:
-:: get_resource_log.bat K83jd-ke83hf-kE308-23Zlsie-03kd1
-:: DEPRECATED - no longer used
+:: get_provisioning_state.bat K83jd-ke83hf-kE308-23Zlsie-03kd1
 :::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-azure group log show "%1" --json --last-deployment
+
+azure group deployment show "%1" 

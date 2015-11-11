@@ -14,6 +14,8 @@ log = logging.getLogger('reapor')
 LOG_FILENAME = 'the_creator.log'
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
+CONST_TIME_FMT = "%Y-%m-%d %H:%M:%S.%f"
+
 # Add the log message handler to the logger
 handler = logging.handlers.RotatingFileHandler(LOG_FILENAME,
                                                maxBytes=2000000,
@@ -22,6 +24,10 @@ handler.setFormatter(formatter)
 log.addHandler(handler)
 
 log.info("Don't fear the reapor")
+# ensure that the azure system is running in arm mode
+# this command takes 1.5 seconds to run and could be executed before every azure call is issues arise with other processes that set the mode to asm
+subprocess.Popen('azure config mode arm', shell=True).wait()
+
 
 try:
 	r = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -33,7 +39,7 @@ try:
 		log.debug('value: ' + r.get(dkey).decode('utf-8'))
 		obj = r.get(dkey).decode('utf-8')
 		jobj = json.loads(obj)
-		ttl = datetime.strptime(jobj['ttl'], "%Y-%m-%d %H:%M:%S.%f")
+		ttl = datetime.strptime(jobj['ttl'], CONST_TIME_FMT)
 		
 		if(ttl <= datetime.utcnow()):
 			# remove appropriate candidates
