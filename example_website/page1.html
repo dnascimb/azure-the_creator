@@ -9,13 +9,17 @@
     <link rel="icon" href="">
     <title>Page 1</title>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
 
+
   </head>
+
 
   <body>
 
@@ -44,7 +48,10 @@
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
-        <form class="form-horizontal" action="page2.html">
+
+        <!-- You will want to use POST here to a real live server to store the contact info. -->
+        <!-- I am only using GET so that I can use navigate between these html pages without a server. -->
+        <form class="form-horizontal" name="inputform" action="page2.html" method="GET" >
         <fieldset>
 
         <!-- Text input-->

@@ -36,9 +36,10 @@ JSON_RESOURCE_GROUP_NAME = "resource_group_name"
 JSON_CREATED_AT = "created_at"
 JSON_EMAIL = "email"
 
-CONST_TIMEDELTA_TO_LIVE_MINUTES = timedelta(minutes=int(120))
+CONST_TIMEDELTA_TO_LIVE_MINUTES = timedelta(minutes=int(135))   # 2 hours plus 15 minutes to allow for Azure deployment
 CONST_MAXTIMEDELTA_TO_LIVE_MINUTES = timedelta(minutes=int(240))
 
+CONST_MAX_ALLOCATED_SYSTEMS = 13
 
 CONST_AZURE_STATUS_SUCCEEDED = "Succeeded"
 CONST_AZURE_STATUS_FAILED = "Failed"
@@ -100,7 +101,7 @@ def crossdomain(origin=None, methods=None, headers=None,
 #
 # Quick way to test that the services are running
 #
-@app.route("/", methods=['GET'])
+@app.route("/", methods=['GET', 'POST'])
 def greetings():
 	return "The Creator"
 
@@ -144,6 +145,14 @@ def create():
 					return json.dumps({'id': dkey, 'minutesleft': str((newttl - datetime.utcnow()).seconds//60) })
 
 		# We will allocate a new test system
+		# First check if we have reached the maximum number of allocated test systems
+		allocatedSystems = r.dbsize()
+		if(allocatedSystems >= CONST_MAX_ALLOCATED_SYSTEMS):
+			log.error("The number of allocated Test Flight systems has reached maximum:")
+			return "The number of allocated Test Flight systems has reached maximum.  Please try again in a few hours:", 202 
+
+
+
 		randName = str(uuid.uuid4()) # generate unique name for the resources
 		# data structure we store in redis for TTL enforcement later
 		reapor_data = {
@@ -200,7 +209,8 @@ def create():
 #
 # Retrieves details about a the specified resource group from Azure
 #
-@app.route("/status/<kuuid>", methods=['GET'])
+@app.route("/status/<kuuid>", methods=['GET', 'POST'])
+@cross_origin(origin='*',headers=['Content- Type','Authorization'])
 def getResourceDetails(kuuid):
 	result = {}
 
@@ -229,7 +239,11 @@ def getResourceDetails(kuuid):
 
 	jobj = json.loads(item.decode('utf-8'))
 	ttl = datetime.strptime(jobj[JSON_TTL], CONST_TIME_FMT)
-	str_minutesleft = str((ttl - datetime.utcnow()).seconds//60)
+	
+	str_minutesleft = "0"
+	if(ttl > datetime.utcnow()):
+		str_minutesleft = str((ttl - datetime.utcnow()).seconds//60)
+
 	# return just the unique names with status information back to the requestor
 	return json.dumps({ 
 	  "status" : str_state, 

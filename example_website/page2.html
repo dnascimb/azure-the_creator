@@ -9,6 +9,7 @@
     <link rel="icon" href="">
     <title>Page 2</title>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -46,7 +47,7 @@
       <div class="row">
         <div class="col-md-11">
           
-          <p><span id="rdp_session_info"></span></p>
+          <p><div id="rdp_session_info" style="white-space: pre;"></div></p>
         </div>
       </div>
 
@@ -57,37 +58,62 @@
       </footer>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     
     <script>
 
-    //
-    // Makes a call to the creator service to spin up resources, then
-    // calls the creator service to check on the status until it returns
-    // connection information for the resources
-    //
+      //
+      // Makes a call to the creator service to spin up resources, then
+      // calls the creator service to check on the status until it returns
+      // connection information for the resources
+      //
+      function getQueryVariable(variable) {
+        var query = window.location.search.substring(1);
+        var vars = query.split("&");
+        for (var i=0;i<vars.length;i++) {
+          var pair = vars[i].split("=");
+          if (pair[0] == variable) {
+            return decodeURIComponent(pair[1].replace(/\+/g, " "));
+          }
+        }
+        alert('Query Variable ' + variable + ' not found');
+      };
+
+      $( "#rdp_session_info" ).empty().text("Greetings: " + getQueryVariable("inputContactName"));
+
+
+      // Trap ajax server errors
+      $( document ).ajaxError(function( event, jqXHR, ajaxSettings, thrownError ) {
+        if(jqXHR.status == 202) {
+                  $( "#rdp_session_info" ).append( "<li>The server has reached the maximum number of concurrent test flights.  Please try again later.</li>");         
+        }
+alert("[event:" + JSON.stringify(event) + "], [jqXHR:" + JSON.stringify(jqXHR) + "], [ajaxSettings:" + JSON.stringify(ajaxSettings) + "]");
+//        var jsonResponse = jQuery.parseJSON(jqXHR.responseText);
+//        $( "#rdp_session_info" ).append( "<li>Error requesting page: " + ajaxSettings.url + "</li><li>Message: " + jsonResponse.message + "</li>");
+      });
 
       // method gets called as a promise
       function createResources() {
         return $.ajax({
           type: "POST",
           dataType: "json",
-          url: 'http://127.0.0.1:5000/resources', 
-          data: {}
+          url: "http://testflightcreator.westus.cloudapp.azure.com:5000/allocate", 
+          data: {email : getQueryVariable("inputContactEmail")}
         });
-      }
+      };
+
 
       // call to create resources
       createResources().done( function( name ) {
-        
+        $( "#rdp_session_info" ).empty().text("We are creating the Test Flight system in Azure...");
         // after the resources have been created, check the status until it returns deployment details
         (function poll(){
            setTimeout(function(){
-              $.ajax({ type: "GET", dataType: "json", url: "http://127.0.0.1:5000/resources/" + name["id"], success: function(data){
-                  if(data["status"] == "Deployed")
-                    $( "#rdp_session_info" ).empty().text( "host1: " + data["hosts"][0]["hostname"] + "\n" +
+              $.ajax({ type: "GET", dataType: "json", url: "http://testflightcreator.westus.cloudapp.azure.com:5000/status/" + name["id"], success: function(data){
+                  if(data["status"] == "Succeeded") {
+                    $( "#rdp_session_info" ).empty().text( "Your Test Flight system is ready:" + "\n" +
+                        "host1: " + data["hosts"][0]["hostname"] + "\n" +
                         "username: " + data["hosts"][0]["username"] + "\n" +
                         "password: " + data["hosts"][0]["password"] + "\n\n" +
                         "host2: " + data["hosts"][1]["hostname"] + "\n" +
@@ -95,15 +121,21 @@
                         "password: " + data["hosts"][1]["password"] + "\n\n" +
                         "host3: " + data["hosts"][2]["hostname"] + "\n" +
                         "username: " + data["hosts"][2]["username"] + "\n" +
-                        "password: " + data["hosts"][2]["password"] + "\n" 
-                        
+                        "password: " + data["hosts"][2]["password"] + "\n" +
+                        "You will have: " + data["minutesleft"] + " minutes to use the system." + "\n" 
 
                      );
-                  else
+                  }
+                  else if(data["status"] == "Running") {
+                    $( "#rdp_session_info" ).empty().text("We are creating the Test Flight system in Azure - please wait (it could take 10-20 minutes)");
                     poll(); //Setup the next poll recursively
+                  }
+                  else {
+                    $( "#rdp_session_info" ).empty().text("We experienced a problem creating the Test Flight system.  Please try again later.");
+                  }
 
               }, dataType: "json"});
-          }, 10000); //every ten seconds
+          }, 20000); //every twenty seconds
         })();
 
 
