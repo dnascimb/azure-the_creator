@@ -1,6 +1,6 @@
 from flask import Flask
 from flask import abort
-from flask import request
+from flask import request, send_from_directory
 from datetime import datetime, timedelta
 from flask.ext.cors import CORS, cross_origin
 from email.utils import parseaddr
@@ -13,7 +13,7 @@ import subprocess
 import logging
 import logging.handlers
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='example_website')
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 cors = CORS(app, resources={r"/resources": {"origins": "*"}})
@@ -45,6 +45,10 @@ CONST_AZURE_STATUS_SUCCEEDED = "Succeeded"
 CONST_AZURE_STATUS_FAILED = "Failed"
 CONST_AZURE_STATUS_CREATING = "Running"
 CONST_AZURE_PROVISIONING_STATE = "ProvisioningState"
+
+CONST_ARM_TEMPLATE_ADMIN_PASSWORD = str(uuid.uuid4()).replace("-", "")[:10] # generate unique admin password
+CONST_ARM_TEMPLATE_ADMIN_USERNAME = "kuser-root"
+
 
 CONST_TIME_FMT = "%Y-%m-%d %H:%M:%S.%f"
 
@@ -176,6 +180,9 @@ def create():
 		data["vmName1"]["value"] = "vm1" + randName_condensed
 		data["vmName2"]["value"] = "vm2" + randName_condensed
 		data["vmName3"]["value"] = "vm3" + randName_condensed
+		data["adminUsername"]["value"] = CONST_ARM_TEMPLATE_ADMIN_USERNAME
+		data["adminPassword"]["value"] = CONST_ARM_TEMPLATE_ADMIN_PASSWORD
+
 		output_filename = randName + "-parameters.json"
 		
 		#write the configuration parameters out to a file
@@ -222,6 +229,7 @@ def getResourceDetails(kuuid):
 		abort(404)
 
 	log.info("getResourceDetails: retrieved " + str(item) + " successfully")
+	jobj = json.loads(item.decode('utf-8'))
 
 	#retrieve resource group deploy state via azure
 	# ex. azure group deployment show "629340b2-7447-4737-9143-9a7ba79eaa4f" 
@@ -236,8 +244,17 @@ def getResourceDetails(kuuid):
 	for str_line in str_lines:
 		if CONST_AZURE_PROVISIONING_STATE in str_line:
 			str_state = str_line.split(":")[2].strip()
+			break
 
-	jobj = json.loads(item.decode('utf-8'))
+	# if status == Failed then most lkely Azure is having a problem, flag record for reaping immediately
+	if(str_state == CONST_AZURE_STATUS_FAILED):
+		# Flag this allocation for immediate reaping
+		newttl = datetime.utcnow()
+		jobj[JSON_TTL] = '' + newttl.strftime(CONST_TIME_FMT)[:-3]
+		r.set(kuuid, json.dumps(jobj))
+		log.info("Resource group: [" + kuuid + "] failed to deploy in Azure - resetting to reap immediately.")
+
+
 	ttl = datetime.strptime(jobj[JSON_TTL], CONST_TIME_FMT)
 	
 	str_minutesleft = "0"
@@ -267,6 +284,25 @@ def getResourceDetails(kuuid):
  	  },
  	  ]
  	})
+
+
+#
+#
+@app.route("/page1.html", methods=['GET'])
+@cross_origin(origin='*',headers=['Content- Type','Authorization'])
+def getPage1():
+#	log.info("Getting page1.")
+	return send_from_directory(app.static_folder, "page1.html", cache_timeout=1)
+
+#
+#
+@app.route("/page2.html", methods=['GET'])
+@cross_origin(origin='*',headers=['Content- Type','Authorization'])
+def getPage2():
+#	log.info("Getting page2.")
+	return send_from_directory(app.static_folder, "page2.html", cache_timeout=1)
+
+
 
 #
 # Terminates a specific resource group from Azure

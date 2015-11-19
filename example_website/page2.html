@@ -9,7 +9,7 @@
     <link rel="icon" href="">
     <title>Page 2</title>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -80,7 +80,10 @@
         alert('Query Variable ' + variable + ' not found');
       };
 
-      $( "#rdp_session_info" ).empty().text("Greetings: " + getQueryVariable("inputContactName"));
+      str_inputContactName = getQueryVariable("inputContactName");
+      str_inputContactEmail = getQueryVariable("inputContactEmail");
+
+      $( "#rdp_session_info" ).empty().text("Greetings: " + str_inputContactName);
 
 
       // Trap ajax server errors
@@ -88,9 +91,22 @@
         if(jqXHR.status == 202) {
                   $( "#rdp_session_info" ).append( "<li>The server has reached the maximum number of concurrent test flights.  Please try again later.</li>");         
         }
-alert("[event:" + JSON.stringify(event) + "], [jqXHR:" + JSON.stringify(jqXHR) + "], [ajaxSettings:" + JSON.stringify(ajaxSettings) + "]");
-//        var jsonResponse = jQuery.parseJSON(jqXHR.responseText);
-//        $( "#rdp_session_info" ).append( "<li>Error requesting page: " + ajaxSettings.url + "</li><li>Message: " + jsonResponse.message + "</li>");
+        else if(jqXHR.status == 0) {
+                  $( "#rdp_session_info" ).append( "<li>The server URL [" + ajaxSettings.url + "] is unreachable.</li>");         
+        }
+        else if(jqXHR.status == 400) {
+                  $( "#rdp_session_info" ).append( "<li>The email parameter [" + str_inputContactEmail + "] is missing or not valid (400).</li>");         
+        }
+        else if(jqXHR.status == 404) {
+                  $( "#rdp_session_info" ).append( "<li>The page or resource URL [" + ajaxSettings.url + "] could not be found (404).</li>");         
+        }
+        else if(jqXHR.status == 500) {
+                  $( "#rdp_session_info" ).append( "<li>A problem occured running the Azure deployment command (500).  Please try again later.</li>");         
+        }
+        else {
+                  $( "#rdp_session_info" ).append( "<li>An unknown error occured. URL: [" + ajaxSettings.url + "] Status: [" + jqXHR.status + "]. </li>");         
+        }
+//alert("[event:" + JSON.stringify(event) + "], [jqXHR:" + JSON.stringify(jqXHR) + "], [ajaxSettings:" + JSON.stringify(ajaxSettings) + "]");
       });
 
       // method gets called as a promise
@@ -99,7 +115,7 @@ alert("[event:" + JSON.stringify(event) + "], [jqXHR:" + JSON.stringify(jqXHR) +
           type: "POST",
           dataType: "json",
           url: "http://testflightcreator.westus.cloudapp.azure.com:5000/allocate", 
-          data: {email : getQueryVariable("inputContactEmail")}
+          data: {email : str_inputContactEmail}
         });
       };
 
@@ -127,11 +143,11 @@ alert("[event:" + JSON.stringify(event) + "], [jqXHR:" + JSON.stringify(jqXHR) +
                      );
                   }
                   else if(data["status"] == "Running") {
-                    $( "#rdp_session_info" ).empty().text("We are creating the Test Flight system in Azure - please wait (it could take 10-20 minutes)");
+                    $( "#rdp_session_info" ).empty().text("We are deploying the Test Flight system in Azure - please wait (it could take 10-20 minutes)");
                     poll(); //Setup the next poll recursively
                   }
                   else {
-                    $( "#rdp_session_info" ).empty().text("We experienced a problem creating the Test Flight system.  Please try again later.");
+                    $( "#rdp_session_info" ).empty().text("A problem occured while deploying the Test Flight system in Azure.  Please try again later.");
                   }
 
               }, dataType: "json"});

@@ -24,10 +24,10 @@
     "value": "vm3"
   },
   "adminUsername": {
-    "value": "kuser-root"
+    "value": "replace"
   },
   "adminPassword": {
-    "value": "38Fd3jlc327"
+    "value": "replace"
   },
   "rdpPort": {
     "value": 50001

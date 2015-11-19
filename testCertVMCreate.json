@@ -1,0 +1,311 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "West US",
+      "allowedValues": [
+        "West US",
+        "East US",
+        "West Europe",
+        "East Asia",
+        "Southeast Asia"
+      ],
+      "metadata": {
+        "description": "The region to deploy the resources into"
+      }
+    },
+    "publicDnsName1": {
+      "type": "string",
+      "defaultValue": "kvm1-tftestcert",
+      "metadata": {
+        "description": "Unique public DNS prefix for the deployment. The fqdn will look something like '<dnsname>.westus.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'."
+      }
+    },
+    "storageAccount": {
+      "type": "string",
+      "defaultValue": "testflightdynamicstorage",
+      "metadata": {
+        "description": "Name of the Storage Account. This has to be a uinique name, up to 24 chars, all lowercase."
+      }
+    },
+    "vmName1": {
+      "type": "string",
+      "defaultValue": "TFTestCertVM1",
+      "metadata": {
+        "description": "The VM for testing Certification"
+      }
+    },
+    "imagePublisher": {
+      "type": "string",
+      "defaultValue": "MicrosoftWindowsServer",
+      "metadata": {
+        "description": "Image Publisher"
+      }
+    },
+    "imageOffer": {
+      "type": "string",
+      "defaultValue": "WindowsServer",
+      "metadata": {
+        "description": "Image Offer"
+      }
+    },
+    "imageSku": {
+      "type": "string",
+      "defaultValue": "2012-R2-Datacenter",
+      "metadata": {
+        "description": "Image SKU"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the administrator of the new VM. Exclusion list: 'admin','administrator'"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "metadata": {
+        "description": "The password for the administrator account of the new VM"
+      }
+    },
+    "rdpPort": {
+      "type": "int",
+      "defaultValue": 50001,
+      "metadata": {
+        "description": "Public port number for RDP"
+      }
+    },
+    "vaultName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the KeyVault"
+      }
+    },
+    "vaultResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "Resource Group of the KeyVault"
+      }
+    },
+    "certificateUrl": {
+      "type": "string",
+      "metadata": {
+        "description": "Url of the certificate with version in KeyVault e.g. https://testault.vault.azure.net/secrets/testcert/b621es1db241e56a72d037479xab1r7"
+      }
+    }
+  },
+  "variables": {
+    "vnetAddressRange": "10.0.0.0/16",
+    "subnetAddressRange": "10.0.0.0/24",
+    "subnetName": "Subnet",
+    "subnet-id": "[concat(resourceId('Microsoft.Network/virtualNetworks','VNET'),'/subnets/',variables('subnetName'))]",
+    "pubIp1": "[concat('pubIp',parameters('publicDnsName1'),'')]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('pubIp1')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('publicDnsName1')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "VNET",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('vnetAddressRange')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "Subnet",
+            "properties": {
+              "addressPrefix": "[variables('subnetAddressRange')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "name": "loadBalancer1",
+      "type": "Microsoft.Network/loadBalancers",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('pubIp1'))]"
+      ],
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "LBFE",
+            "properties": {
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pubIp1'))]"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "LBBAP"
+          }
+        ],
+        "inboundNatRules": [
+          {
+            "name": "rdp",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer1'),'/frontendIPConfigurations/LBFE')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": "[parameters('rdpPort')]",
+              "backendPort": 3389,
+              "enableFloatingIP": false
+            }            
+          },
+          {
+            "name": "WinRM5985",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer1'),'/frontendIPConfigurations/LBFE')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 5985,
+              "backendPort": 5985,
+              "enableFloatingIP": false
+            }            
+          },
+          {
+            "name": "WinRM5986",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer1'),'/frontendIPConfigurations/LBFE')]"
+              },
+              "protocol": "tcp",
+              "frontendPort": 5986,
+              "backendPort": 5986,
+              "enableFloatingIP": false
+            }            
+          }          
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(parameters('vmName1'),'-nif')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "Microsoft.Network/virtualNetworks/VNET",
+        "Microsoft.Network/loadBalancers/loadBalancer1"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnet-id')]"
+              },
+              "loadBalancerBackendAddressPools": [
+                {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer1'),'/backendAddressPools/LBBAP')]"
+                }
+              ],
+              "loadBalancerInboundNatRules": [
+                {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer1'),'/inboundNatRules/rdp')]"
+                },
+                {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer1'),'/inboundNatRules/WinRM5985')]"
+                },
+                {
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer1'),'/inboundNatRules/WinRM5986')]"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-05-01-preview",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[parameters('vmName1')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/',parameters('vmName1'),'-nif')]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Standard_A2"
+        },
+        "osProfile": {
+          "computername": "[parameters('vmName1')]",
+          "adminUsername": "[parameters('adminUserName')]",
+          "adminPassword": "[parameters('adminPassword')]",
+          "secrets": [
+            {
+              "sourceVault": {
+                "id": "[resourceId(parameters('vaultResourceGroup'), 'Microsoft.KeyVault/vaults', parameters('vaultName'))]"
+              },
+              "vaultCertificates": [
+                {
+                  "certificateUrl": "[parameters('certificateUrl')]",
+                  "certificateStore": "My"
+                }
+              ]
+            }
+          ],
+          "windowsConfiguration": {
+            "provisionVMAgent": "true",
+            "winRM": {
+              "listeners": [
+                {
+                  "protocol": "http"
+                },
+                {
+                  "protocol": "https",
+                  "certificateUrl": "[parameters('certificateUrl')]"
+                }
+              ]
+            }
+          }
+        },
+        "storageProfile": {
+          "osDisk": {
+            "osType": "Windows",
+            "name": "osdisk",
+            "image": {
+              "uri": "https://testflightdynamicstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/TFDynamicBaseVMImage-osDisk.d1009251-508c-4d6f-85a4-3835e56f1199.vhd"
+            },
+            "vhd": {
+              "uri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net/vhds/',parameters('vmName1'),'-osdisk.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vmName1'),'-nif'))]"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

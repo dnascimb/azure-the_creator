@@ -1,0 +1,32 @@
+{
+  "location": {
+    "value": "West US"
+  },
+  "storageAccount": {
+    "value": "testflightdynamicstorage"
+  },
+  "publicDnsName1": {
+    "value": "kvm1-tftestcertvm1"
+  },
+  "vmName1": {
+    "value": "TFTestCertVM1"
+  },
+  "vaultResourceGroup": {
+    "value": "TFKeyVaultRG"
+  },
+  "vaultName": {
+    "value": "TFCertKeyVault"
+  },
+  "certificateUrl": {
+    "value": "https://tfcertkeyvault.vault.azure.net:443/secrets/TFTestCertVM1/cab1e69404244129b8f41a53f7740382"
+  },
+  "adminUsername": {
+    "value": "kuser-root"
+  },
+  "adminPassword": {
+    "value": "38Fd3jlc327"
+  },
+  "rdpPort": {
+    "value": 50001
+  }
+}
