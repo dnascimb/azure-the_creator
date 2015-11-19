@@ -46,7 +46,7 @@ CONST_AZURE_STATUS_FAILED = "Failed"
 CONST_AZURE_STATUS_CREATING = "Running"
 CONST_AZURE_PROVISIONING_STATE = "ProvisioningState"
 
-CONST_ARM_TEMPLATE_ADMIN_PASSWORD = str(uuid.uuid4()).replace("-", "")[:10] # generate unique admin password
+CONST_ARM_TEMPLATE_ADMIN_PASSWORD = "Rk0" + str(uuid.uuid4()).replace("-", "")[:8] # generate unique admin password
 CONST_ARM_TEMPLATE_ADMIN_USERNAME = "kuser-root"
 
 
