@@ -3,7 +3,7 @@
     "value": "West US"
   },
   "storageAccount": {
-    "value": "testflightdynamicstorage"
+    "value": "tfmarketplacestorage"
   },
   "publicDnsName1": {
     "value": "kvm1-tftestcertvm1"

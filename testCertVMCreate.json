@@ -25,7 +25,7 @@
     },
     "storageAccount": {
       "type": "string",
-      "defaultValue": "testflightdynamicstorage",
+      "defaultValue": "tfmarketplacestorage",
       "metadata": {
         "description": "Name of the Storage Account. This has to be a uinique name, up to 24 chars, all lowercase."
       }
@@ -289,7 +289,7 @@
             "osType": "Windows",
             "name": "osdisk",
             "image": {
-              "uri": "https://testflightdynamicstorage.blob.core.windows.net/system/Microsoft.Compute/Images/templates/TFDynamicBaseVMImage-osDisk.d1009251-508c-4d6f-85a4-3835e56f1199.vhd"
+              "uri": "https://tfmarketplacestorage.blob.core.windows.net/system/Microsoft.Compute/Images/baseimage/TFMarketplaceBaseImage-osDisk.29f625cd-d96f-44d3-886a-10e19143beca.vhd"
             },
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccount'),'.blob.core.windows.net/vhds/',parameters('vmName1'),'-osdisk.vhd')]"
