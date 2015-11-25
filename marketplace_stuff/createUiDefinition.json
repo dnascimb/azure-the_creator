@@ -7,7 +7,7 @@
                 "name": "vmNamePrefix",
                 "type": "Microsoft.Common.TextBox",
                 "label": "VM name prefix",
-                "toolTip": "This will be used to create the three VMs: <prefix>VM1 <prefix>VM2 <prefix>VM3",
+                "toolTip": "This will be used to create the three VM names: *prefix*VM1 *prefix*VM2 *prefix*VM3",
                 "defaultValue": "TestFlight",
                 "constraints": {
                     "required": true,
@@ -19,7 +19,7 @@
                 "name": "adminUsername",
                 "type": "Microsoft.Compute.UserNameTextBox",
                 "label": "Admin Username",
-                "toolTip": "Admin username for the three virtual machines.",
+                "toolTip": "The admin username will be used for each of the three test tlight VMs.",
                 "constraints": {
                     "required": true
                     },
@@ -33,7 +33,7 @@
                     "confirmPassword": "Confirm password"
                 },
                 "toolTip": {
-                    "password": "Admin password for the three virtual machines."
+                    "password": "The admin password will be used for each of the three test tlight VMs."
                 },
                 "constraints": {
                     "required": true
@@ -65,8 +65,8 @@
                     {
                         "name": "vmSize",
                         "type": "Microsoft.Compute.SizeSelector",
-                        "label": "Virtual machine size",
-                        "toolTip": "The size of the three virtual machine.",
+                        "label": "Virtual Machine Size:",
+                        "toolTip": "The compute size of the three virtual machines.",
                         "recommendedSizes": [
                             "Standard_A2"
                         ],
@@ -90,27 +90,18 @@
                         "count": 3
                     },
                     {
-                        "name": "dnsAndPublicIP",
-                        "type": "Microsoft.Network.PublicIpAddressCombo",
-                        "label": {
-                            "publicIpAddress": "Ignored - Not Used:",
-                            "domainNameLabel": "DNS Prefix"
-                        },
-                        "toolTip": {
-                            "publicIpAddressName": "This value is not used - IpAddressNames will be created using the DNS Prefix ",
-                            "domainNameLabel": "DNS Prefix is used for the three VMs DNS and their IpAddressNames."
-                        },
-                        "defaultValue": {
-                            "publicIpAddressName": "Not_used",
-                            "domainNameLabel": "must_be_unique"
-                        },
+                        "name": "publicDnsNamePrefix",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Public DNS Prefix:",
+                        "toolTip": "[concat('The DNS prefix must be unique and will be used to create all three public DNS. The full DNS will be dns_prefix-VM1.', location(), '.cloudapp.azure.com')]",
+                        "defaultValue": "change-me-to-be-something-unique",
                         "constraints": {
-                            "required": true
-                        },
-                        "options": {
-                            "hideNone": true
+                            "required": true,
+                            "regex": "^[a-z][a-z0-9-]{1,61}[a-z0-9]$",
+                            "validationMessage": "Only alphanumeric characters and hyphen are allowed, and the value must be less than 64 characters long."
                         }
                     }
+
                 ]
             }
         ],
@@ -123,7 +114,7 @@
             "StorageAccountName": "[steps('infrastructureConfig').storageAccount.name]",
             "storageAccountType": "[steps('infrastructureConfig').storageAccount.type]",
 			"existingStorageAccountRG": "[steps('infrastructureConfig').storageAccount.resourceGroup]",
-            "domainName": "[steps('infrastructureConfig').domainName]",
+            "publicDnsNamePrefix": "[steps('infrastructureConfig').publicDnsNamePrefix]",
             "vmSize": "[steps('infrastructureConfig').vmSize]"
         }
     }
