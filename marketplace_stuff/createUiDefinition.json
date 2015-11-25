@@ -71,48 +71,60 @@
                             }
                         ]
                     },
-
                     {
-                        "name": "vmSize",
-                        "type": "Microsoft.Compute.SizeSelector",
-                        "label": "Virtual Machine Size:",
-                        "toolTip": "The compute size of the three virtual machines.",
-                        "recommendedSizes": [
-                            "Standard_A2",
-                            "Standard_A1"
-                        ],
-                        "constraints": {
-                            "allowedSizes": [
-                              "Standard_D1",
-                              "Standard_D2",
-                              "Standard_D3",
-                              "Standard_D4",
-                              "Standard_A1",
-                              "Standard_A2"
-                            ],
-                            "required": true
-                        },
-                        "osPlatform": "Windows",
-                        "imageReference": {
-                            "publisher": "MicrosoftWindowsServer",
-                            "offer": "WindowsServer",
-                            "sku": "2012-R2-Datacenter"
-                        },
-                        "count": 3
+                        "name": "Compute",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Compute",
+                        "elements": [
+                            {
+                                "name": "vmSize",
+                                "type": "Microsoft.Compute.SizeSelector",
+                                "label": "Virtual Machine Size:",
+                                "toolTip": "The compute size of the three virtual machines.",
+                                "recommendedSizes": [
+                                    "Standard_A2",
+                                    "Standard_A1"
+                                ],
+                                "constraints": {
+                                    "allowedSizes": [
+                                      "Standard_D1",
+                                      "Standard_D2",
+                                      "Standard_D3",
+                                      "Standard_D4",
+                                      "Standard_A1",
+                                      "Standard_A2"
+                                    ],
+                                    "required": true
+                                },
+                                "osPlatform": "Windows",
+                                "imageReference": {
+                                    "publisher": "MicrosoftWindowsServer",
+                                    "offer": "WindowsServer",
+                                    "sku": "2012-R2-Datacenter"
+                                },
+                                "count": 3
+                            }
+                        ]
                     },
                     {
-                        "name": "publicDnsNamePrefix",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Public DNS prefix:",
-                        "toolTip": "The DNS prefix must be unique and will be used to create all three public DNS <<myuniquednsprefix>>-VM1. Example of resulting FQDN: <<myuniquednsprefix>>-VM1.westus.cloudapp.azure.com   We will also use this value to create the resource Names for the three IpAdresses, which will be stored in your designated resource group from step1",
-                        "defaultValue": "change this to be something unique without spaces",
-                        "constraints": {
-                            "required": true,
-                            "regex": "^[a-z][a-z0-9-]{1,61}[a-z0-9]$",
-                            "validationMessage": "Only lower-case alphanumeric characters and hyphen are allowed (no spaces), and the value must be less than 64 characters long."
-                        }
+                        "name": "Network",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Network",
+                        "elements": [
+                            {
+                                "name": "publicDnsNamePrefix",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "Public DNS prefix:",
+                                "toolTip": "The DNS prefix must be unique and will be used to create all three public DNS <<myuniquednsprefix>>-VM1. Example of resulting FQDN: <<myuniquednsprefix>>-VM1.westus.cloudapp.azure.com   We will also use this value to create the resource Names for the three IpAdresses, which will be stored in your designated resource group from step1",
+                                "defaultValue": "my unique dns prefix (no spaces)",
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^[a-z][a-z0-9-]{1,61}[a-z0-9]$",
+                                    "validationMessage": "Only lower-case alphanumeric characters and hyphen are allowed (no spaces), and the value must be less than 64 characters long."
+                                }
+                            }
+                        ]
                     }
-
                 ]
             }
         ],
@@ -125,8 +137,8 @@
             "StorageAccountName": "[steps('infrastructureConfig').Storage.storageAccount.name]",
             "storageAccountType": "[steps('infrastructureConfig').Storage.storageAccount.type]",
 			"existingStorageAccountRG": "[steps('infrastructureConfig').Storage.storageAccount.resourceGroup]",
-            "publicDnsNamePrefix": "[steps('infrastructureConfig').publicDnsNamePrefix]",
-            "vmSize": "[steps('infrastructureConfig').vmSize]"
+            "publicDnsNamePrefix": "[steps('infrastructureConfig').Network.publicDnsNamePrefix]",
+            "vmSize": "[steps('infrastructureConfig').Compute.vmSize]"
         }
     }
 }
