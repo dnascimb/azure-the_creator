@@ -7,7 +7,7 @@
                 "name": "vmNamePrefix",
                 "type": "Microsoft.Common.TextBox",
                 "label": "VM name prefix",
-                "toolTip": "This will be used to create the three VM names: *prefix*VM1 *prefix*VM2 *prefix*VM3",
+                "toolTip": "This will be used to create the three VM names: Using the default prefix would make the VM names = TestFlightVM1 TestFlightVM2 TestFlightVM3",
                 "defaultValue": "TestFlight",
                 "constraints": {
                     "required": true,
@@ -19,7 +19,7 @@
                 "name": "adminUsername",
                 "type": "Microsoft.Compute.UserNameTextBox",
                 "label": "Admin Username",
-                "toolTip": "The admin username will be used for each of the three test tlight VMs.",
+                "toolTip": "The admin username will be used for each of the three test flight VMs.",
                 "constraints": {
                     "required": true
                     },
@@ -33,7 +33,7 @@
                     "confirmPassword": "Confirm password"
                 },
                 "toolTip": {
-                    "password": "The admin password will be used for each of the three test tlight VMs."
+                    "password": "The admin password will be used for each of the three test flight VMs."
                 },
                 "constraints": {
                     "required": true
@@ -55,6 +55,7 @@
                         "name": "storageAccount",
                         "type": "Microsoft.Storage.StorageAccountSelector",
                         "label": "Storage account for the three VHDs",
+                        "toolTip": "The three Virtual Hard Disks (VHDs) for the VMs will be stored in the 'vhds' blob folder of this storage account.",
                         "constraints": {
                             "required": true
                         },
@@ -93,12 +94,12 @@
                         "name": "publicDnsNamePrefix",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Public DNS Prefix:",
-                        "toolTip": "[concat('The DNS prefix must be unique and will be used to create all three public DNS. The full DNS will be dns_prefix-VM1.', location(), '.cloudapp.azure.com')]",
-                        "defaultValue": "change-me-to-be-something-unique",
+                        "toolTip": "The DNS prefix must be unique and will be used to create all three public DNS {dnsprefix}-VM1. Example: {myuniqueprefix}-VM1.westus.cloudapp.azure.com",
+                        "defaultValue": "change me to be something unique",
                         "constraints": {
                             "required": true,
                             "regex": "^[a-z][a-z0-9-]{1,61}[a-z0-9]$",
-                            "validationMessage": "Only alphanumeric characters and hyphen are allowed, and the value must be less than 64 characters long."
+                            "validationMessage": "Only alphanumeric characters and hyphen are allowed (no spaces), and the value must be less than 64 characters long."
                         }
                     }
 
