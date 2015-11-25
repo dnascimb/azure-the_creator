@@ -7,7 +7,7 @@
                 "name": "vmNamePrefix",
                 "type": "Microsoft.Common.TextBox",
                 "label": "VM name prefix",
-                "toolTip": "This will be used to create the three VMs: <*prefix*>VM1 <*prefix*>VM2 <*prefix*>VM3",
+                "toolTip": "This will be used to create the three VMs: <prefix>VM1 <prefix>VM2 <prefix>VM3",
                 "defaultValue": "TestFlight",
                 "constraints": {
                     "required": true,
@@ -18,19 +18,25 @@
             {
                 "name": "adminUsername",
                 "type": "Microsoft.Compute.UserNameTextBox",
-                "label": "Username",
+                "label": "Admin Username",
                 "toolTip": "Admin username for the three virtual machines.",
+                "constraints": {
+                    "required": true
+                    },
                 "osPlatform": "Windows"
             },
             {
                 "name": "adminPassword",
                 "type": "Microsoft.Compute.CredentialsCombo",
                 "label": {
-                    "password": "Password",
+                    "password": "Admin Password",
                     "confirmPassword": "Confirm password"
                 },
                 "toolTip": {
                     "password": "Admin password for the three virtual machines."
+                },
+                "constraints": {
+                    "required": true
                 },
                 "osPlatform": "Windows"
             }
@@ -49,6 +55,9 @@
                         "name": "storageAccount",
                         "type": "Microsoft.Storage.StorageAccountSelector",
                         "label": "Storage account for the three VHDs",
+                        "constraints": {
+                            "required": true
+                        },
                         "defaultValue": {
                             "type": "Standard_LRS"
                         }
@@ -69,7 +78,8 @@
                               "Standard_D4",
                               "Standard_A1",
                               "Standard_A2"
-                            ]
+                            ],
+                            "required": true
                         },
                         "osPlatform": "Windows",
                         "imageReference": {
@@ -80,23 +90,26 @@
                         "count": 3
                     },
                     {
-                      "name": "dnsAndPublicIP",
-                      "type": "Microsoft.Network.PublicIpAddressCombo",
-                      "label": {
-                        "publicIpAddress": "Not Used:",
-                        "domainNameLabel": "DNS Prefix"
-                      },
-                      "toolTip": {
-                        "publicIpAddressName": "This value is not used - IpAddressNames will be created using the DNS Prefix ",
-                        "domainNameLabel": "DNS Prefix is used for the three VMs DNS and their publicIpAddressName."
-                      },
-                      "defaultValue": {
-                        "publicIpAddressName": "Not_used",
-                        "domainNameLabel": "must_be_unique"
-                      },
-                      "options": {
-                        "hideNone": true
-                      }
+                        "name": "dnsAndPublicIP",
+                        "type": "Microsoft.Network.PublicIpAddressCombo",
+                        "label": {
+                            "publicIpAddress": "Ignored - Not Used:",
+                            "domainNameLabel": "DNS Prefix"
+                        },
+                        "toolTip": {
+                            "publicIpAddressName": "This value is not used - IpAddressNames will be created using the DNS Prefix ",
+                            "domainNameLabel": "DNS Prefix is used for the three VMs DNS and their IpAddressNames."
+                        },
+                        "defaultValue": {
+                            "publicIpAddressName": "Not_used",
+                            "domainNameLabel": "must_be_unique"
+                        },
+                        "constraints": {
+                            "required": true
+                        },
+                        "options": {
+                            "hideNone": true
+                        }
                     }
                 ]
             }
