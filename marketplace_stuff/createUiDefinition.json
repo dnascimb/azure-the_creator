@@ -53,14 +53,14 @@
                 "bladeTitle": "Infrastructure settings",
                 "elements": [
                     {
-                        "name": "storageSection",
+                        "name": "Storage",
                         "type": "Microsoft.Common.Section",
                         "label": "Storage Account",
                         "elements": [
                             {
                                 "name": "storageAccount",
                                 "type": "Microsoft.Storage.StorageAccountSelector",
-                                "label": "Select an existing (or create a new) storage account for the three VHDs",
+                                "label": "Select or create a storage account",
                                 "toolTip": "The three Virtual Hard Disks (VHDs) for the VMs will be stored in the 'vhds' blob folder of this storage account.",
                                 "constraints": {
                                     "required": true
@@ -121,10 +121,10 @@
             "vmNamePrefix": "[steps('basics').vmNamePrefix]",
             "adminUsername": "[steps('basics').adminUsername]",
             "adminPassword": "[steps('basics').adminPassword]",
-            "storageAccountNewOrExisting" : "[steps('infrastructureConfig').storageSection.storageAccount.newOrExisting]",
-            "StorageAccountName": "[steps('infrastructureConfig').storageSection.storageAccount.name]",
-            "storageAccountType": "[steps('infrastructureConfig').storageSection.storageAccount.type]",
-			"existingStorageAccountRG": "[steps('infrastructureConfig').storageSection.storageAccount.resourceGroup]",
+            "storageAccountNewOrExisting" : "[steps('infrastructureConfig').Storage.storageAccount.newOrExisting]",
+            "StorageAccountName": "[steps('infrastructureConfig').Storage.storageAccount.name]",
+            "storageAccountType": "[steps('infrastructureConfig').Storage.storageAccount.type]",
+			"existingStorageAccountRG": "[steps('infrastructureConfig').Storage.storageAccount.resourceGroup]",
             "publicDnsNamePrefix": "[steps('infrastructureConfig').publicDnsNamePrefix]",
             "vmSize": "[steps('infrastructureConfig').vmSize]"
         }
