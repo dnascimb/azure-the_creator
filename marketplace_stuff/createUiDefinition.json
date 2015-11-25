@@ -18,8 +18,9 @@
             {
                 "name": "adminUsername",
                 "type": "Microsoft.Compute.UserNameTextBox",
-                "label": "Admin Username",
-                "toolTip": "The admin username will be used for each of the three test flight VMs.",
+                "label": "Admin username",
+                "toolTip": "The admin username entered here will be used on each of the three test flight VMs.",
+                "defaultValue": "kuser-root",
                 "constraints": {
                     "required": true
                     },
@@ -29,11 +30,11 @@
                 "name": "adminPassword",
                 "type": "Microsoft.Compute.CredentialsCombo",
                 "label": {
-                    "password": "Admin Password",
+                    "password": "Admin password",
                     "confirmPassword": "Confirm password"
                 },
                 "toolTip": {
-                    "password": "The admin password will be used for each of the three test flight VMs."
+                    "password": "The admin password entered here will be used on each of the three test flight VMs."
                 },
                 "constraints": {
                     "required": true
@@ -52,24 +53,33 @@
                 "bladeTitle": "Infrastructure settings",
                 "elements": [
                     {
-                        "name": "storageAccount",
-                        "type": "Microsoft.Storage.StorageAccountSelector",
-                        "label": "Storage account for the three VHDs",
-                        "toolTip": "The three Virtual Hard Disks (VHDs) for the VMs will be stored in the 'vhds' blob folder of this storage account.",
-                        "constraints": {
-                            "required": true
-                        },
-                        "defaultValue": {
-                            "type": "Standard_LRS"
-                        }
+                        "name": "storageSection",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Storage Account",
+                        "elements": [
+                            {
+                                "name": "storageAccount",
+                                "type": "Microsoft.Storage.StorageAccountSelector",
+                                "label": "Select an existing (or create a new) storage account for the three VHDs",
+                                "toolTip": "The three Virtual Hard Disks (VHDs) for the VMs will be stored in the 'vhds' blob folder of this storage account.",
+                                "constraints": {
+                                    "required": true
+                                },
+                                "defaultValue": {
+                                    "type": "Standard_LRS"
+                                }
+                            }
+                        ]
                     },
+
                     {
                         "name": "vmSize",
                         "type": "Microsoft.Compute.SizeSelector",
                         "label": "Virtual Machine Size:",
                         "toolTip": "The compute size of the three virtual machines.",
                         "recommendedSizes": [
-                            "Standard_A2"
+                            "Standard_A2",
+                            "Standard_A1"
                         ],
                         "constraints": {
                             "allowedSizes": [
@@ -93,7 +103,7 @@
                     {
                         "name": "publicDnsNamePrefix",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "Public DNS Prefix:",
+                        "label": "Public DNS prefix:",
                         "toolTip": "The DNS prefix must be unique and will be used to create all three public DNS <<myuniquednsprefix>>-VM1. Example of resulting FQDN: <<myuniquednsprefix>>-VM1.westus.cloudapp.azure.com   We will also use this value to create the resource Names for the three IpAdresses, which will be stored in your designated resource group from step1",
                         "defaultValue": "change this to be something unique without spaces",
                         "constraints": {
@@ -111,10 +121,10 @@
             "vmNamePrefix": "[steps('basics').vmNamePrefix]",
             "adminUsername": "[steps('basics').adminUsername]",
             "adminPassword": "[steps('basics').adminPassword]",
-            "storageAccountNewOrExisting" : "[steps('infrastructureConfig').storageAccount.newOrExisting]",
-            "StorageAccountName": "[steps('infrastructureConfig').storageAccount.name]",
-            "storageAccountType": "[steps('infrastructureConfig').storageAccount.type]",
-			"existingStorageAccountRG": "[steps('infrastructureConfig').storageAccount.resourceGroup]",
+            "storageAccountNewOrExisting" : "[steps('infrastructureConfig').storageSection.storageAccount.newOrExisting]",
+            "StorageAccountName": "[steps('infrastructureConfig').storageSection.storageAccount.name]",
+            "storageAccountType": "[steps('infrastructureConfig').storageSection.storageAccount.type]",
+			"existingStorageAccountRG": "[steps('infrastructureConfig').storageSection.storageAccount.resourceGroup]",
             "publicDnsNamePrefix": "[steps('infrastructureConfig').publicDnsNamePrefix]",
             "vmSize": "[steps('infrastructureConfig').vmSize]"
         }
