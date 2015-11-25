@@ -115,7 +115,7 @@
                                 "name": "publicDnsNamePrefix",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Public DNS prefix:",
-                                "toolTip": "The DNS prefix must be unique and will be used to create all three public DNS <<myuniquednsprefix>>-VM1. Example of resulting FQDN: <<myuniquednsprefix>>-VM1.westus.cloudapp.azure.com   We will also use this value to create the resource Names for the three IpAdresses, which will be stored in your designated resource group from step1",
+                                "toolTip": "The DNS prefix must be unique and will be used to create all three public DNS _myuniquednsprefix_-VM1. Example of resulting FQDN: _myuniquednsprefix_-VM1.westus.cloudapp.azure.com   We will also use this value to create the resource Names for the three IpAdresses, which will be stored in your designated resource group from step1",
                                 "defaultValue": "my unique dns prefix (no spaces)",
                                 "constraints": {
                                     "required": true,
