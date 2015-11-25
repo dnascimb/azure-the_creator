@@ -94,12 +94,12 @@
                         "name": "publicDnsNamePrefix",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Public DNS Prefix:",
-                        "toolTip": "The DNS prefix must be unique and will be used to create all three public DNS {dnsprefix}-VM1. Example: {myuniqueprefix}-VM1.westus.cloudapp.azure.com",
-                        "defaultValue": "change me to be something unique",
+                        "toolTip": "The DNS prefix must be unique and will be used to create all three public DNS <<myuniquednsprefix>>-VM1. Example of resulting FQDN: <<myuniquednsprefix>>-VM1.westus.cloudapp.azure.com   We will also use this value to create the resource Names for the three IpAdresses, which will be stored in your designated resource group from step1",
+                        "defaultValue": "change this to be something unique without spaces",
                         "constraints": {
                             "required": true,
                             "regex": "^[a-z][a-z0-9-]{1,61}[a-z0-9]$",
-                            "validationMessage": "Only alphanumeric characters and hyphen are allowed (no spaces), and the value must be less than 64 characters long."
+                            "validationMessage": "Only lower-case alphanumeric characters and hyphen are allowed (no spaces), and the value must be less than 64 characters long."
                         }
                     }
 
