@@ -1,0 +1,117 @@
+{
+    "handler": "Microsoft.Compute.MultiVm",
+    "version": "0.0.1-preview",
+    "parameters": {
+        "basics": [
+            {
+                "name": "vmNamePrefix",
+                "type": "Microsoft.Common.TextBox",
+                "label": "VM name prefix",
+                "toolTip": "This will be used to create the three VMs: <*prefix*>VM1 <*prefix*>VM2 <*prefix*>VM3",
+                "defaultValue": "TestFlight",
+                "constraints": {
+                    "required": true,
+                    "regex": "^[a-zA-Z0-9]{4,12}$",
+                    "validationMessage": "Name must be 4-12 chars in length."
+                }
+            },
+            {
+                "name": "adminUsername",
+                "type": "Microsoft.Compute.UserNameTextBox",
+                "label": "Username",
+                "toolTip": "Admin username for the three virtual machines.",
+                "osPlatform": "Windows"
+            },
+            {
+                "name": "adminPassword",
+                "type": "Microsoft.Compute.CredentialsCombo",
+                "label": {
+                    "password": "Password",
+                    "confirmPassword": "Confirm password"
+                },
+                "toolTip": {
+                    "password": "Admin password for the three virtual machines."
+                },
+                "osPlatform": "Windows"
+            }
+        ],
+        "steps": [
+            {
+                "name": "infrastructureConfig",
+                "label": "Infrastructure settings",
+                "subLabel": {
+                    "preValidation": "Configure the infrastructure settings",
+                    "postValidation": "Done"
+                },
+                "bladeTitle": "Infrastructure settings",
+                "elements": [
+                    {
+                        "name": "storageAccount",
+                        "type": "Microsoft.Storage.StorageAccountSelector",
+                        "label": "Storage account for the three VHDs",
+                        "defaultValue": {
+                            "type": "Standard_LRS"
+                        }
+                    },
+                    {
+                        "name": "vmSize",
+                        "type": "Microsoft.Compute.SizeSelector",
+                        "label": "Virtual machine size",
+                        "toolTip": "The size of the three virtual machine.",
+                        "recommendedSizes": [
+                            "Standard_A2"
+                        ],
+                        "constraints": {
+                            "allowedSizes": [
+                              "Standard_D1",
+                              "Standard_D2",
+                              "Standard_D3",
+                              "Standard_D4",
+                              "Standard_A1",
+                              "Standard_A2"
+                            ]
+                        },
+                        "osPlatform": "Windows",
+                        "imageReference": {
+                            "publisher": "MicrosoftWindowsServer",
+                            "offer": "WindowsServer",
+                            "sku": "2012-R2-Datacenter"
+                        },
+                        "count": 3
+                    },
+                    {
+                      "name": "dnsAndPublicIP",
+                      "type": "Microsoft.Network.PublicIpAddressCombo",
+                      "label": {
+                        "publicIpAddress": "Not Used:",
+                        "domainNameLabel": "DNS Prefix"
+                      },
+                      "toolTip": {
+                        "publicIpAddressName": "This value is not used - IpAddressNames will be created using the DNS Prefix ",
+                        "domainNameLabel": "DNS Prefix is used for the three VMs DNS and their publicIpAddressName."
+                      },
+                      "defaultValue": {
+                        "publicIpAddressName": "Not_used",
+                        "domainNameLabel": "must_be_unique"
+                      },
+                      "options": {
+                        "hideNone": true
+                      }
+                    }
+                ]
+            }
+        ],
+        "outputs": {
+            "location": "[location()]",
+            "vmNamePrefix": "[steps('basics').vmNamePrefix]",
+            "adminUsername": "[steps('basics').adminUsername]",
+            "adminPassword": "[steps('basics').adminPassword]",
+            "storageAccountNewOrExisting" : "[steps('infrastructureConfig').storageAccount.newOrExisting]",
+            "StorageAccountName": "[steps('infrastructureConfig').storageAccount.name]",
+            "storageAccountType": "[steps('infrastructureConfig').storageAccount.type]",
+			"existingStorageAccountRG": "[steps('infrastructureConfig').storageAccount.resourceGroup]",
+            "domainName": "[steps('infrastructureConfig').domainName]",
+            "vmSize": "[steps('infrastructureConfig').vmSize]"
+        }
+    }
+}
