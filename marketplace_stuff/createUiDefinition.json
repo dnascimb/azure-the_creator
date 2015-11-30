@@ -63,23 +63,11 @@
                 },
                 "osPlatform": "Windows",
                 "imageReference": {
-                    "publisher": "kollective-enterprise-video",
-                    "offer": "kollective-sd-ecdn-test-flight-vm",
-                    "sku": "kollectiveecdntestflight"
+                    "publisher": "MicrosoftWindowsServer",
+                    "offer": "WindowsServer",
+                    "sku": "2012‐R2‐Datacenter"
                 },
                 "count": 3
-            },
-            {
-                "name": "publicDnsNamePrefix",
-                "type": "Microsoft.Common.TextBox",
-                "label": "Public DNS prefix:",
-                "toolTip": "The public DNS prefix must be unique, and will be used to create all three public DNS {myuniquednsprefix}-vm1. Example of resulting Fully Qualified DNS: myuniquednsprefix-vm1.westus.cloudapp.azure.com",
-                "defaultValue": "my unique dns prefix (no spaces)",
-                "constraints": {
-                    "required": true,
-                    "regex": "^[a-z][a-z0-9-]{1,61}[a-z0-9]$",
-                    "validationMessage": "Only lower-case alphanumeric characters and hyphen are allowed (no spaces allowed). It must begin with an alfa and not end with a hyphen. The length must be shorter than 64 characters."
-                }
             }
         ],
         "steps": [],
@@ -88,7 +76,6 @@
             "clusterNamePrefix": "[basics('clusterNamePrefix')]",
             "adminUsername": "[basics('adminUsername')]",
             "adminPassword": "[basics('adminPassword')]",
-            "publicDnsNamePrefix": "[basics('publicDnsNamePrefix')]",
             "vmSize": "[basics('vmSize')]"
         }
     }
