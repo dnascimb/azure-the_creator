@@ -42,31 +42,7 @@
                 "osPlatform": "Windows"
             }
         ],
-        "steps": [
-            {
-                "name": "wordpressInfo",
-                "label": "WordPress information",
-                "subLabel": {
-                    "preValidation": "Provide WordPress information",
-                    "postValidation": "Done"
-                },
-                "bladeTitle": "WordPress information",
-                "elements": [
-                    {
-                        "name": "webSiteHostingPlan",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Web site hosting plan",
-                        "toolTip": "",
-                        "defaultValue": "wordpressMySQLplan",
-                        "constraints": {
-                            "required": true,
-                            "regex": "^[a-z0-9A-Z]{1,40}$",
-                            "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-40 characters long."
-                        }
-                    }
-                ]
-            }
-        ],
+        "steps": [],
         "outputs": {
             "location": "[location()]",
             "clusterNamePrefix": "[basics('clusterNamePrefix')]",
