@@ -5,26 +5,26 @@
     "location": {
       "type": "string",
       "metadata": {
-        "description": "The region to deploy the resources into"
+        "description": "The region to deploy the resources into."
       }
     },
     "adminUsername": {
       "type": "string",
       "metadata": {
-        "description": "The name of the administrator of the new VM."
+        "description": "The name of the administrator of the new VMs."
       }
     },
     "adminPassword": {
       "type": "securestring",
       "metadata": {
-        "description": "The password for the administrator account of the new VM"
+        "description": "The password for the administrator account of the new VMs."
       }
     },
-    "vmNamePrefix": {
+    "clusterNamePrefix": {
       "type": "string",
-      "defaultValue": "EcdnTestFlight",
+      "defaultValue": "TestFlight",
       "metadata": {
-        "description": "Prefix for the three VMs"
+        "description": "Prefix for the three VMs, IpAddresses, NICs, and Vnet"
       }
     },
     "vmSize": {
@@ -82,21 +82,28 @@
   },
   "variables": {
     "imagePublisher" : "kollective-enterprise-video",
-    "imageOffer" : "ecdn-test-flight",
-    "imageSKU" : "kollective-sd-ecdn-test-flight-vm",
+    "imageOffer" : "kollective-sd-ecdn-test-flight-vm",
+    "imageSKU" : "kollectiveecdntestflight",
+    "vnetName": "[concat(variables('clusterNamePrefix'),'-vnet')]",
     "vnetAddressRange": "10.0.0.0/16",
     "subnetAddressRange": "10.0.0.0/24",
     "subnetName": "Subnet",
     "subnet-id": "[concat(resourceId('Microsoft.Network/virtualNetworks','VNET'),'/subnets/',variables('subnetName'))]",
-    "vmName1" : "[concat(parameters('vmNamePrefix'),'-vm1')]",
-    "vmName2" : "[concat(parameters('vmNamePrefix'),'-vm2')]",
-    "vmName3" : "[concat(parameters('vmNamePrefix'),'-vm3')]",
+    "vmName1" : "[concat(parameters('clusterNamePrefix'),'Vm1')]",
+    "vmName2" : "[concat(parameters('clusterNamePrefix'),'Vm2')]",
+    "vmName3" : "[concat(parameters('clusterNamePrefix'),'Vm3')]",
     "publicDnsName1": "[concat(parameters('publicDnsNamePrefix'),'-vm1')]",
     "publicDnsName2": "[concat(parameters('publicDnsNamePrefix'),'-vm2')]",
     "publicDnsName3": "[concat(parameters('publicDnsNamePrefix'),'-vm3')]",
-    "pubIp1": "[concat('pubIp',variables('publicDnsName1'),'')]",
-    "pubIp2": "[concat('pubIp',variables('publicDnsName2'),'')]",
-    "pubIp3": "[concat('pubIp',variables('publicDnsName3'),'')]",
+    "pubIp1": "[concat(variables('clusterNamePrefix'),'-pubIp1')]",
+    "pubIp2": "[concat(variables('clusterNamePrefix'),'-pubIp2')]",
+    "pubIp3": "[concat(variables('clusterNamePrefix'),'-pubIp3')]",
+    "nicName1": "[concat(parameters('clusterNamePrefix'),'-nic1')]",
+    "nicName2": "[concat(parameters('clusterNamePrefix'),'-nic2')]",
+    "nicName3": "[concat(parameters('clusterNamePrefix'),'-nic3')]",
+    "loadBalName1": "[concat(parameters('clusterNamePrefix'),'-lb1')]",
+    "loadBalName2": "[concat(parameters('clusterNamePrefix'),'-lb2')]",
+    "loadBalName3": "[concat(parameters('clusterNamePrefix'),'-lb3')]",
 
     "storageAccountSetupURL" : "[uri(parameters('artifactsBaseUrl'), concat('storageAccount-', parameters('storageAccountNewOrExisting'), '.json'))]",
   },
@@ -166,7 +173,7 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Network/virtualNetworks",
-      "name": "VNET",
+      "name": "[variables('vnetName')]",
       "location": "[parameters('location')]",
       "properties": {
         "addressSpace": {
@@ -186,7 +193,7 @@
     },
     {
       "apiVersion": "2015-05-01-preview",
-      "name": "loadBalancer1",
+      "name": "[variables('loadBalName1')]",
       "type": "Microsoft.Network/loadBalancers",
       "location": "[parameters('location')]",
       "dependsOn": [
@@ -213,7 +220,7 @@
             "name": "rdp",
             "properties": {
               "frontendIPConfiguration": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer1'),'/frontendIPConfigurations/LBFE')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalName1')),'/frontendIPConfigurations/LBFE')]"
               },
               "protocol": "tcp",
               "frontendPort": 3389,
@@ -226,7 +233,7 @@
     },
     {
       "apiVersion": "2015-05-01-preview",
-      "name": "loadBalancer2",
+      "name": "[variables('loadBalName2')]",
       "type": "Microsoft.Network/loadBalancers",
       "location": "[parameters('location')]",
       "dependsOn": [
@@ -253,7 +260,7 @@
             "name": "rdp",
             "properties": {
               "frontendIPConfiguration": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer2'),'/frontendIPConfigurations/LBFE')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalName2')),'/frontendIPConfigurations/LBFE')]"
               },
               "protocol": "tcp",
               "frontendPort": 3389,
@@ -266,7 +273,7 @@
     },
     {
       "apiVersion": "2015-05-01-preview",
-      "name": "loadBalancer3",
+      "name": "[variables('loadBalName3')]",
       "type": "Microsoft.Network/loadBalancers",
       "location": "[parameters('location')]",
       "dependsOn": [
@@ -293,7 +300,7 @@
             "name": "rdp",
             "properties": {
               "frontendIPConfiguration": {
-                "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer3'),'/frontendIPConfigurations/LBFE')]"
+                "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalName3')),'/frontendIPConfigurations/LBFE')]"
               },
               "protocol": "tcp",
               "frontendPort": 3389,
@@ -307,11 +314,11 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('vmName1'),'-nif')]",
+      "name": "[variables('nicName1')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "Microsoft.Network/virtualNetworks/VNET",
-        "Microsoft.Network/loadBalancers/loadBalancer1"
+        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalName1')]",
       ],
       "properties": {
         "ipConfigurations": [
@@ -324,12 +331,12 @@
               },
               "loadBalancerBackendAddressPools": [
                 {
-                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer1'),'/backendAddressPools/LBBAP')]"
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalName1')),'/backendAddressPools/LBBAP')]"
                 }
               ],
               "loadBalancerInboundNatRules": [
                 {
-                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer1'),'/inboundNatRules/rdp')]"
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalName1')),'/inboundNatRules/rdp')]"
                 }
               ]
             }
@@ -340,11 +347,11 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('vmName2'),'-nif')]",
+      "name": "[variables('nicName2')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "Microsoft.Network/virtualNetworks/VNET",
-        "Microsoft.Network/loadBalancers/loadBalancer2"
+        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalName2')]",
       ],
       "properties": {
         "ipConfigurations": [
@@ -357,12 +364,12 @@
               },
               "loadBalancerBackendAddressPools": [
                 {
-                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer2'),'/backendAddressPools/LBBAP')]"
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalName2')),'/backendAddressPools/LBBAP')]"
                 }
               ],
               "loadBalancerInboundNatRules": [
                 {
-                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer2'),'/inboundNatRules/rdp')]"
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalName2')),'/inboundNatRules/rdp')]"
                 }
               ]
             }
@@ -373,11 +380,11 @@
     {
       "apiVersion": "2015-05-01-preview",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('vmName3'),'-nif')]",
+      "name": "[variables('nicName3')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "Microsoft.Network/virtualNetworks/VNET",
-        "Microsoft.Network/loadBalancers/loadBalancer3"
+        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalName3')]",
       ],
       "properties": {
         "ipConfigurations": [
@@ -390,12 +397,12 @@
               },
               "loadBalancerBackendAddressPools": [
                 {
-                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer3'),'/backendAddressPools/LBBAP')]"
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalName3')),'/backendAddressPools/LBBAP')]"
                 }
               ],
               "loadBalancerInboundNatRules": [
                 {
-                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers','loadBalancer3'),'/inboundNatRules/rdp')]"
+                  "id": "[concat(resourceId('Microsoft.Network/loadBalancers', variables('loadBalName3')),'/inboundNatRules/rdp')]"
                 }
               ]
             }
@@ -410,7 +417,7 @@
       "location": "[parameters('location')]",
       "dependsOn": [
         "storageAccountSetup",
-        "[concat('Microsoft.Network/networkInterfaces/',variables('vmName1'),'-nif')]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName1'))]"
       ],
       "properties": {
         "hardwareProfile": {
@@ -441,7 +448,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('vmName1'),'-nif'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName1'))]"
             }
           ]
         }
@@ -454,7 +461,7 @@
       "location": "[parameters('location')]",
       "dependsOn": [
         "storageAccountSetup",
-        "[concat('Microsoft.Network/networkInterfaces/',variables('vmName2'),'-nif')]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName2'))]"
       ],
       "properties": {
         "hardwareProfile": {
@@ -485,7 +492,7 @@
         "networkProfile": {
           "networkInterfaces": [ 
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('vmName2'),'-nif'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName2'))]"
             }
           ]
         }
@@ -498,7 +505,7 @@
       "location": "[parameters('location')]",
       "dependsOn": [
         "storageAccountSetup",
-        "[concat('Microsoft.Network/networkInterfaces/',variables('vmName3'),'-nif')]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicName3'))]"
       ],
       "properties": {
         "hardwareProfile": {
@@ -529,7 +536,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(variables('vmName3'),'-nif'))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName3'))]"
             }
           ]
         }

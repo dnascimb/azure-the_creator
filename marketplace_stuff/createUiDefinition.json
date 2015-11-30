@@ -4,10 +4,10 @@
     "parameters": {
         "basics": [
             {
-                "name": "vmNamePrefix",
+                "name": "clusterNamePrefix",
                 "type": "Microsoft.Common.TextBox",
-                "label": "VM name prefix",
-                "toolTip": "This will be used to create the three VM names: Using the default prefix would make the VM names = TestFlightVM1 TestFlightVM2 TestFlightVM3",
+                "label": "Cluster name prefix",
+                "toolTip": "This will be used to create the three VM names, Public IP names, NIC names, Load Balancer names, and Virtual Network name: Using the default prefix {TestFlight} would make the VM names = TestFlightVm1 TestFlightVm2 TestFlightVm3 ",
                 "defaultValue": "TestFlight",
                 "constraints": {
                     "required": true,
@@ -98,9 +98,9 @@
                                 },
                                 "osPlatform": "Windows",
                                 "imageReference": {
-                                    "publisher": "MicrosoftWindowsServer",
-                                    "offer": "WindowsServer",
-                                    "sku": "2012-R2-Datacenter"
+                                    "publisher": "kollective-enterprise-video",
+                                    "offer": "kollective-sd-ecdn-test-flight-vm",
+                                    "sku": "kollectiveecdntestflight"
                                 },
                                 "count": 3
                             }
@@ -115,7 +115,7 @@
                                 "name": "publicDnsNamePrefix",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Public DNS prefix:",
-                                "toolTip": "The DNS prefix must be unique, and will be used to create all three public DNS {myuniquednsprefix}-VM1. Example of resulting FQDN: myuniquednsprefix-VM1.westus.cloudapp.azure.com   We will also use this value to create the resource Names for the three IpAdresses, which will be stored in your designated resource group from step1",
+                                "toolTip": "The public DNS prefix must be unique, and will be used to create all three public DNS {myuniquednsprefix}-vm1. Example of resulting Fully Qualified DNS: myuniquednsprefix-vm1.westus.cloudapp.azure.com",
                                 "defaultValue": "my unique dns prefix (no spaces)",
                                 "constraints": {
                                     "required": true,
@@ -130,7 +130,7 @@
         ],
         "outputs": {
             "location": "[location()]",
-            "vmNamePrefix": "[steps('basics').vmNamePrefix]",
+            "clusterNamePrefix": "[steps('basics').clusterNamePrefix]",
             "adminUsername": "[steps('basics').adminUsername]",
             "adminPassword": "[steps('basics').adminPassword]",
             "storageAccountNewOrExisting" : "[steps('infrastructureConfig').Storage.storageAccount.newOrExisting]",
