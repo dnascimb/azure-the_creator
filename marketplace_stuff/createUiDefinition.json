@@ -40,6 +40,18 @@
                     "required": true
                 },
                 "osPlatform": "Windows"
+            },
+            {
+                "name": "storageAccount",
+                "type": "Microsoft.Storage.StorageAccountSelector",
+                "label": "Select or create a storage account",
+                "toolTip": "The three Virtual Hard Disks (VHDs) for the VMs will be stored in the 'vhds' blob folder of this storage account.",
+                "constraints": {
+                    "required": true
+                },
+                "defaultValue": {
+                    "type": "Standard_LRS"
+                }
             }
         ],
         "steps": [],
