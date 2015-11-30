@@ -130,9 +130,9 @@
         ],
         "outputs": {
             "location": "[location()]",
-            "clusterNamePrefix": "[steps('basics').clusterNamePrefix]",
-            "adminUsername": "[steps('basics').adminUsername]",
-            "adminPassword": "[steps('basics').adminPassword]",
+            "clusterNamePrefix": "[basics('clusterNamePrefix')]",
+            "adminUsername": "[basics('adminUsername')]",
+            "adminPassword": "[basics('adminPassword')]",
             "storageAccountNewOrExisting" : "[steps('infrastructureConfig').Storage.storageAccount.newOrExisting]",
             "StorageAccountName": "[steps('infrastructureConfig').Storage.storageAccount.name]",
             "storageAccountType": "[steps('infrastructureConfig').Storage.storageAccount.type]",
