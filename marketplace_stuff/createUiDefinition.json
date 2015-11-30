@@ -94,13 +94,13 @@
                 }
             }
         ],
-        "steps": [],
+        "steps": {},
         "outputs": {
             "location": "[location()]",
             "clusterNamePrefix": "[basics('clusterNamePrefix')]",
             "adminUsername": "[basics('adminUsername')]",
             "adminPassword": "[basics('adminPassword')]",
-            "storageAccountNewOrExisting" : "[basics('storageAccount').newOrExisting]",
+            "storageAccountNewOrExisting": "[basics('storageAccount').newOrExisting]",
             "StorageAccountName": "[basics('storageAccount').name]",
             "storageAccountType": "[basics('storageAccount').type]",
 			"existingStorageAccountRG": "[basics('storageAccount').resourceGroup]",
