@@ -23,7 +23,7 @@
                 "defaultValue": "kuser-root",
                 "constraints": {
                     "required": true
-                },
+                    },
                 "osPlatform": "Windows"
             },
             {
@@ -40,43 +40,105 @@
                     "required": true
                 },
                 "osPlatform": "Windows"
-            },
-            {
-                "name": "vmSize",
-                "type": "Microsoft.Compute.SizeSelector",
-                "label": "Virtual Machine Size:",
-                "toolTip": "The compute size of the three virtual machines.",
-                "recommendedSizes": [
-                    "Standard_A2",
-                    "Standard_A1"
-                ],
-                "constraints": {
-                    "allowedSizes": [
-                        "Standard_D1",
-                        "Standard_D2",
-                        "Standard_D3",
-                        "Standard_D4",
-                        "Standard_A1",
-                        "Standard_A2"
-                    ],
-                    "required": true
-                },
-                "osPlatform": "Windows",
-                "imageReference": {
-                    "publisher": "MicrosoftWindowsServer",
-                    "offer": "WindowsServer",
-                    "sku": "2012‐R2‐Datacenter"
-                },
-                "count": 3
             }
         ],
-        "steps": [],
+        "steps": [
+            {
+                "name": "infrastructureConfig",
+                "label": "Infrastructure settings",
+                "subLabel": {
+                    "preValidation": "Configure the infrastructure settings",
+                    "postValidation": "Done"
+                },
+                "bladeTitle": "Infrastructure settings",
+                "elements": [
+                    {
+                        "name": "Storage",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Storage Account",
+                        "elements": [
+                            {
+                                "name": "storageAccount",
+                                "type": "Microsoft.Storage.StorageAccountSelector",
+                                "label": "Select or create a storage account",
+                                "toolTip": "The three Virtual Hard Disks (VHDs) for the VMs will be stored in the 'vhds' blob folder of this storage account.",
+                                "constraints": {
+                                    "required": true
+                                },
+                                "defaultValue": {
+                                    "type": "Standard_LRS"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Compute",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Compute",
+                        "elements": [
+                            {
+                                "name": "vmSize",
+                                "type": "Microsoft.Compute.SizeSelector",
+                                "label": "Virtual Machine Size:",
+                                "toolTip": "The compute size of the three virtual machines.",
+                                "recommendedSizes": [
+                                    "Standard_A2",
+                                    "Standard_A1"
+                                ],
+                                "constraints": {
+                                    "allowedSizes": [
+                                      "Standard_D1",
+                                      "Standard_D2",
+                                      "Standard_D3",
+                                      "Standard_D4",
+                                      "Standard_A1",
+                                      "Standard_A2"
+                                    ],
+                                    "required": true
+                                },
+                                "osPlatform": "Windows",
+                                "imageReference": {
+                                    "publisher": "MicrosoftWindowsServer",
+                                    "offer": "WindowsServer",
+                                    "sku": "2012‐R2‐Datacenter"
+                                },
+                                "count": 3
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Network",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Network",
+                        "elements": [
+                            {
+                                "name": "publicDnsNamePrefix",
+                                "type": "Microsoft.Common.TextBox",
+                                "label": "Public DNS prefix:",
+                                "toolTip": "The public DNS prefix must be unique, and will be used to create all three public DNS {myuniquednsprefix}-vm1. Example of resulting Fully Qualified DNS: myuniquednsprefix-vm1.westus.cloudapp.azure.com",
+                                "defaultValue": "my unique dns prefix (no spaces)",
+                                "constraints": {
+                                    "required": true,
+                                    "regex": "^[a-z][a-z0-9-]{1,61}[a-z0-9]$",
+                                    "validationMessage": "Only lower-case alphanumeric characters and hyphen are allowed (no spaces), and the value must be less than 64 characters long."
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ],
         "outputs": {
             "location": "[location()]",
             "clusterNamePrefix": "[basics('clusterNamePrefix')]",
             "adminUsername": "[basics('adminUsername')]",
             "adminPassword": "[basics('adminPassword')]",
-            "vmSize": "[basics('vmSize')]"
+            "storageAccountNewOrExisting" : "[steps('infrastructureConfig').Storage.storageAccount.newOrExisting]",
+            "storageAccountName": "[steps('infrastructureConfig').Storage.storageAccount.name]",
+            "storageAccountType": "[steps('infrastructureConfig').Storage.storageAccount.type]",
+            "existingStorageAccountRG": "[steps('infrastructureConfig').Storage.storageAccount.resourceGroup]",
+            "publicDnsNamePrefix": "[steps('infrastructureConfig').Network.publicDnsNamePrefix]",
+            "vmSize": "[steps('infrastructureConfig').Compute.vmSize]"
         }
     }
 }
