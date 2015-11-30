@@ -61,7 +61,7 @@
             "adminUsername": "[basics('adminUsername')]",
             "adminPassword": "[basics('adminPassword')]",
             "storageAccountNewOrExisting": "[basics('storageAccount').newOrExisting]",
-            "StorageAccountName": "[basics('storageAccount').name]",
+            "storageAccountName": "[basics('storageAccount').name]",
             "storageAccountType": "[basics('storageAccount').type]",
 			"existingStorageAccountRG": "[basics('storageAccount').resourceGroup]",
             "publicDnsNamePrefix": "[basics('publicDnsNamePrefix')]",
