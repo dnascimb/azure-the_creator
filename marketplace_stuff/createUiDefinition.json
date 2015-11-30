@@ -23,7 +23,7 @@
                 "defaultValue": "kuser-root",
                 "constraints": {
                     "required": true
-                    },
+                },
                 "osPlatform": "Windows"
             },
             {
@@ -94,7 +94,8 @@
                 }
             }
         ],
-        "steps": {},
+        "steps": [
+        ],
         "outputs": {
             "location": "[location()]",
             "clusterNamePrefix": "[basics('clusterNamePrefix')]",
