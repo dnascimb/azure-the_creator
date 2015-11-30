@@ -93,7 +93,7 @@
                     "validationMessage": "Only lower-case alphanumeric characters and hyphen are allowed (no spaces allowed). It must begin with an alfa and not end with a hyphen. The length must be shorter than 64 characters."
                 }
             }
-       ]
+        ],
         "steps": [],
         "outputs": {
             "location": "[location()]",
