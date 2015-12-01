@@ -96,7 +96,7 @@
                         "name": "publicDnsNamePrefix",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Public DNS prefix:",
-                        "toolTip": "The public DNS prefix must be unique to the azure region, and will be used to create all three public DNS [myuniquednsprefix]-vm1. Example of resulting Fully Qualified DNS: (e.g. [myuniquednsprefix]-vm1.region.cloudapp.azure.com)",
+                        "toolTip": "The public DNS prefix must be unique to the azure region, and will be used to create all three VM public DNS entries [myuniquednsprefix]-vm1. Example of resulting Fully Qualified DNS: (e.g. [myuniquednsprefix]-vm1.region.cloudapp.azure.com)",
                         "defaultValue": "my unique dns prefix (no spaces)",
                         "constraints": {
                             "required": true,

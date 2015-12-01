@@ -2,13 +2,6 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "artifactsBaseUrl": {
-      "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/dnascimb/azure-the_creator/master/marketplace_stuff/",
-      "metadata": {
-        "description": "Base URL of the solution template gallery package."
-      }
-    },
     "location": {
       "type": "string",
       "metadata": {
@@ -104,7 +97,7 @@
     "loadBalName2": "[concat(parameters('clusterNamePrefix'),'-lb2')]",
     "loadBalName3": "[concat(parameters('clusterNamePrefix'),'-lb3')]",
 
-    "storageAccountSetupURL" : "[uri(parameters('artifactsBaseUrl'), concat('storageAccount-', parameters('storageAccountNewOrExisting'), '.json'))]",
+    "storageAccountSetupURL" : "[uri(deployment().properties.templateLink.uri, concat('storageAccount-', parameters('storageAccountNewOrExisting'), '.json'))]",
   },
   "resources": [
     {
@@ -541,5 +534,23 @@
         }
       }
     }
-  ]
+  ],
+  "outputs": {
+    "userName": {
+      "type": "string",
+      "value": "[parameters('adminUsername')]"
+    },
+    "vm1DnsName": {
+      "type": "string",
+      "value": "[reference(variables('pubIp1')).dnsSettings.fqdn]"
+    },
+    "vm2DnsName": {
+      "type": "string",
+      "value": "[reference(variables('pubIp2')).dnsSettings.fqdn]"
+    },
+    "vm3DnsName": {
+      "type": "string",
+      "value": "[reference(variables('pubIp3')).dnsSettings.fqdn]"
+    }
+  }
 }
