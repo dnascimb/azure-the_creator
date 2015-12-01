@@ -115,12 +115,12 @@
                                 "name": "publicDnsNamePrefix",
                                 "type": "Microsoft.Common.TextBox",
                                 "label": "Public DNS prefix:",
-                                "toolTip": "The public DNS prefix must be unique, and will be used to create all three public DNS (myuniquednsprefix)-vm1. Example of resulting Fully Qualified DNS: (e.g. [dnsprefix]-vm1.region.cloudapp.azure.com)",
+                                "toolTip": "The public DNS prefix must be unique to the azure region, and will be used to create all three public DNS [myuniquednsprefix]-vm1. Example of resulting Fully Qualified DNS: (e.g. [myuniquednsprefix]-vm1.region.cloudapp.azure.com)",
                                 "defaultValue": "my unique dns prefix (no spaces)",
                                 "constraints": {
                                     "required": true,
                                     "regex": "^[a-z][a-z0-9-]{1,61}[a-z0-9]$",
-                                    "validationMessage": "Only lower-case alphanumeric characters and hyphen are allowed (no spaces), and the value must be less than 64 characters long."
+                                    "validationMessage": "Only lower-case alphanumeric characters and hyphen are allowed (no spaces). It must begin with a letter and not end with a hyphen. The length must be shorter than 64 characters."
                                 }
                             }
                         ]
