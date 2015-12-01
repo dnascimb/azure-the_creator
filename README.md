@@ -19,7 +19,7 @@ Instructions:
 - Run the web services
 	- python creator.py
 	- try http://localhost:5000/
-- (Optional) Setup service on the machine that executes 'python reapor.py' every 1 min
+- (Optional) Setup service on the machine that executes 'python reapor.py' every 10 mins
 
 
 Usage
@@ -28,7 +28,7 @@ Usage
 | Method        | URL                                            | Purpose  |
 | ------------- | ---------------------------------------------- | -------- |
 | GET           | http://localhost:5000/                         | proves the module is running successfully |
-| POST          | http://localhost:5000/resources                | Creates a resource with 30min TTL |
-| GET           | http://localhost:5000/resources/*id*           | Retrieves the credentials for a specific resources |
+| POST          | http://localhost:5000/allocate <email>required | Creates a resource with 120min TTL |
+| GET           | http://localhost:5000/status/*id*              | Retrieves the credentials for a specific resources |
 | DELETE        | http://localhost:5000/resources/*id*           | Deletes a resource |
 
