@@ -28,6 +28,6 @@ Usage
 | Method        | URL                                            | Purpose  |
 | ------------- | ---------------------------------------------- | -------- |
 | GET           | http://localhost:5000/                         | proves the module is running successfully |
-| POST          | http://localhost:5000/allocate     *email*     | Creates a resource with 120min TTL |
+| POST          | http://localhost:5000/allocate    <br>params: *email*     | Creates a resource with 120min TTL |
 | GET           | http://localhost:5000/status/*id*              | Retrieves the credentials for a specific resources |
 
