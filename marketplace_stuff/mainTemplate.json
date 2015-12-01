@@ -3,12 +3,11 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "artifactsBaseUrl": {
-        "type": "string",
-        "defaultValue": "https://raw.githubusercontent.com/dnascimb/azure-the_creator/master/marketplace_stuff/",
-        "metadata": {
-            "description": "Base URL of the solution template gallery package",
-            "artifactsBaseUrl": ""
-        }
+      "type": "string",
+      "defaultValue": "https://raw.githubusercontent.com/dnascimb/azure-the_creator/master/marketplace_stuff/",
+      "metadata": {
+        "description": "Base URL of the solution template gallery package."
+      }
     },
     "location": {
       "type": "string",
