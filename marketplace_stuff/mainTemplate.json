@@ -73,8 +73,8 @@
     }
   },
   "variables": {
-    "imagePublisher" : "kollective-enterprise-video",
-    "imageOffer" : "kollective-sd-ecdn-test-flight-vm",
+    "imagePublisher" : "kollective",
+    "imageOffer" : "sd-ecdn-test-flight-vm",
     "imageSKU" : "kollectiveecdntestflight",
     "vnetName": "[concat(variables('clusterNamePrefix'),'-vnet')]",
     "vnetAddressRange": "10.0.0.0/16",
