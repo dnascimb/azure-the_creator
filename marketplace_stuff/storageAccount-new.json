@@ -27,13 +27,17 @@
     "storageAccountExistingRG" : {
       "type" : "string",
       "defaultValue" : ""
+    },
+    "storage-api-version": {
+      "type" : "string",
+      "defaultValue" : ""
     }
   },
   "resources": [
     {
 			"type": "Microsoft.Storage/storageAccounts",
 			"name": "[parameters('storageAccountName')]",
-			"apiVersion": "2015-05-01-preview",
+			"apiVersion": "[parameters('storage-api-version')]",
 			"location": "[parameters('location')]",
 			"properties": {
 				"accountType": "[parameters('storageAccountType')]"
@@ -42,7 +46,7 @@
   ],
   "outputs": {
     "storageAccountId": {
-      "value": "[resourceId('Microsoft.Storage/StorageAccounts',parameters('storageAccountName'))]",
+      "value": "[resourceId('Microsoft.Storage/storageAccounts',parameters('storageAccountName'))]",
       "type": "string"
     }
   }

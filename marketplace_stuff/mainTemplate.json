@@ -37,7 +37,7 @@
     "publicDnsNamePrefix": {
       "type": "string",
       "metadata": {
-        "description": "Unique public DNS prefix for the deployment. The fqdn will look something like '<dnsname>.westus.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'."
+        "description": "Public DNS prefix for the deployment. The fqdn will look something like '<dnsprefix><unique-string>-vm1.westus.cloudapp.azure.com'."
       }
     },
     "storageAccountName": {
@@ -73,9 +73,22 @@
     }
   },
   "variables": {
-    "imagePublisher" : "kollective",
-    "imageOffer" : "sd-ecdn-test-flight-vm",
-    "imageSKU" : "kollectiveecdntestflight",
+    "imagePublisher": "MicrosoftWindowsServer",
+    "imageOffer": "WindowsServer",
+    "imageSKU": "2012-R2-Datacenter",
+
+    "imagePublisherX" : "kollective",
+    "imageOfferX" : "sd-ecdn-test-flight-vm",
+    "imageSKUX" : "kollectiveecdntestflight",
+
+    "dnsUniqueString" : "[uniquestring(resourceGroup().id, deployment().name)]",
+    "deployments-api-version" : "2015-01-01",
+    "storage-api-version" : "2015-06-15",
+    "publicIPAddresses-api-version" : "2015-06-15",
+    "virtualNetworks-api-version" : "2015-06-15",
+    "loadBalancers" : "2015-06-15",
+    "networkInterfaces" : "2015-06-15",
+    "virtualMachines" : "2015-06-15",
     "vnetName": "[concat(variables('clusterNamePrefix'),'-vnet')]",
     "vnetAddressRange": "10.0.0.0/16",
     "subnetAddressRange": "10.0.0.0/24",
@@ -84,9 +97,9 @@
     "vmName1" : "[concat(parameters('clusterNamePrefix'),'Vm1')]",
     "vmName2" : "[concat(parameters('clusterNamePrefix'),'Vm2')]",
     "vmName3" : "[concat(parameters('clusterNamePrefix'),'Vm3')]",
-    "publicDnsName1": "[concat(parameters('publicDnsNamePrefix'),'-vm1')]",
-    "publicDnsName2": "[concat(parameters('publicDnsNamePrefix'),'-vm2')]",
-    "publicDnsName3": "[concat(parameters('publicDnsNamePrefix'),'-vm3')]",
+    "publicDnsName1": "[concat(parameters('publicDnsNamePrefix'), dnsUniqueString,'-vm1')]",
+    "publicDnsName2": "[concat(parameters('publicDnsNamePrefix'), dnsUniqueString,'-vm2')]",
+    "publicDnsName3": "[concat(parameters('publicDnsNamePrefix'), dnsUniqueString,'-vm3')]",
     "pubIp1": "[concat(parameters('clusterNamePrefix'),'-pubIp1')]",
     "pubIp2": "[concat(parameters('clusterNamePrefix'),'-pubIp2')]",
     "pubIp3": "[concat(parameters('clusterNamePrefix'),'-pubIp3')]",
@@ -103,7 +116,7 @@
     {
       "name": "storageAccountSetup",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion" : "2015-01-01",
+      "apiVersion" : "[variables('deployments-api-version')]",
       "properties" : {
         "mode": "Incremental",
         "templateLink" : {
@@ -111,6 +124,9 @@
           "contentVersion": "1.0.0.0"
         },
         "parameters" : {
+          "storage-api-version": {
+            "value": "[variables('storage-api-version')]"
+          },
           "location": {
             "value": "[parameters('location')]"
           },
@@ -127,7 +143,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('publicIPAddresses-api-version')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('pubIp1')]",
       "location": "[parameters('location')]",
@@ -139,7 +155,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('publicIPAddresses-api-version')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('pubIp2')]",
       "location": "[parameters('location')]",
@@ -151,7 +167,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('publicIPAddresses-api-version')]",
       "type": "Microsoft.Network/publicIPAddresses",
       "name": "[variables('pubIp3')]",
       "location": "[parameters('location')]",
@@ -163,7 +179,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('virtualNetworks-api-version')]",
       "type": "Microsoft.Network/virtualNetworks",
       "name": "[variables('vnetName')]",
       "location": "[parameters('location')]",
@@ -184,7 +200,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('loadBalancers-api-version')]",
       "name": "[variables('loadBalName1')]",
       "type": "Microsoft.Network/loadBalancers",
       "location": "[parameters('location')]",
@@ -224,7 +240,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('loadBalancers-api-version')]",
       "name": "[variables('loadBalName2')]",
       "type": "Microsoft.Network/loadBalancers",
       "location": "[parameters('location')]",
@@ -264,7 +280,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('loadBalancers-api-version')]",
       "name": "[variables('loadBalName3')]",
       "type": "Microsoft.Network/loadBalancers",
       "location": "[parameters('location')]",
@@ -304,7 +320,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('networkInterfaces-api-version')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName1')]",
       "location": "[parameters('location')]",
@@ -337,7 +353,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('networkInterfaces-api-version')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName2')]",
       "location": "[parameters('location')]",
@@ -370,7 +386,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('networkInterfaces-api-version')]",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName3')]",
       "location": "[parameters('location')]",
@@ -403,7 +419,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('virtualMachines-api-version')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[variables('vmName1')]",
       "location": "[parameters('location')]",
@@ -412,6 +428,11 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName1'))]"
       ],
       "properties": {
+        "plan": {
+          "name": "[variables('imageSKU')]",
+          "publisher":"[variables('imagePublisher')]",
+          "product":"[variables('imageOffer')]"
+        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
@@ -447,7 +468,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('virtualMachines-api-version')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[variables('vmName2')]",
       "location": "[parameters('location')]",
@@ -456,6 +477,11 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName2'))]"
       ],
       "properties": {
+        "plan": {
+          "name": "[variables('imageSKU')]",
+          "publisher":"[variables('imagePublisher')]",
+          "product":"[variables('imageOffer')]"
+        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
@@ -491,7 +517,7 @@
       }
     },
     {
-      "apiVersion": "2015-05-01-preview",
+      "apiVersion": "[variables('virtualMachines-api-version')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[variables('vmName3')]",
       "location": "[parameters('location')]",
@@ -500,6 +526,11 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName3'))]"
       ],
       "properties": {
+        "plan": {
+          "name": "[variables('imageSKU')]",
+          "publisher":"[variables('imagePublisher')]",
+          "product":"[variables('imageOffer')]"
+        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
@@ -540,17 +571,29 @@
       "type": "string",
       "value": "[parameters('adminUsername')]"
     },
-    "vm1DnsName": {
+    "vm1_DnsName": {
       "type": "string",
-      "value": "[reference(variables('pubIp1')).dnsSettings.fqdn]"
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pubIp1')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn]"
     },
-    "vm2DnsName": {
+    "vm1_IPAddress": {
       "type": "string",
-      "value": "[reference(variables('pubIp2')).dnsSettings.fqdn]"
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pubIp1')), variables('publicIPAddresses-api-version')).ipAddress]"
     },
-    "vm3DnsName": {
+    "vm2_DnsName": {
       "type": "string",
-      "value": "[reference(variables('pubIp3')).dnsSettings.fqdn]"
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pubIp2')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn]"
+    },
+    "vm2_IPAddress": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pubIp2')), variables('publicIPAddresses-api-version')).ipAddress]"
+    },
+    "vm3_DnsName": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pubIp3')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn]"
+    },
+    "vm3_IPAddress": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pubIp3')), variables('publicIPAddresses-api-version')).ipAddress]"
     }
   }
 }
