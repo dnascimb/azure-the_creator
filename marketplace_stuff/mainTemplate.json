@@ -325,8 +325,8 @@
       "name": "[variables('nicName1')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
-        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalName1')]",
+        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
+        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalName1')]"
       ],
       "properties": {
         "ipConfigurations": [
@@ -358,8 +358,8 @@
       "name": "[variables('nicName2')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
-        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalName2')]",
+        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
+        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalName2')]"
       ],
       "properties": {
         "ipConfigurations": [
@@ -391,8 +391,8 @@
       "name": "[variables('nicName3')]",
       "location": "[parameters('location')]",
       "dependsOn": [
-        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
-        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalName3')]",
+        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
+        "[concat('Microsoft.Network/loadBalancers/', variables('loadBalName3')]"
       ],
       "properties": {
         "ipConfigurations": [
