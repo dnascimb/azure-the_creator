@@ -444,7 +444,6 @@
             "version": "latest"
           },
           "osDisk": {
-            "osType": "Windows",
             "name": "osdisk",
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccountName'),'.blob.core.windows.net/vhds/',variables('vmName1'),'-osdisk.vhd')]"
@@ -488,7 +487,6 @@
             "version": "latest"
           },
           "osDisk": {
-            "osType": "Windows",
             "name": "osdisk",
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccountName'),'.blob.core.windows.net/vhds/',variables('vmName2'),'-osdisk.vhd')]"
@@ -532,7 +530,6 @@
             "version": "latest"
           },
           "osDisk": {
-            "osType": "Windows",
             "name": "osdisk",
             "vhd": {
               "uri": "[concat('http://',parameters('storageAccountName'),'.blob.core.windows.net/vhds/',variables('vmName3'),'-osdisk.vhd')]"
