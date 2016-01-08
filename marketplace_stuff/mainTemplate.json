@@ -73,8 +73,8 @@
     }
   },
   "variables": {
-    "imagePublisher" : "kollective",
-    "imageOffer" : "sd-ecdn-test-flight-vm",
+    "imagePublisher" : "Kollective",
+    "imageOffer" : "Video Delivery Network Demo (Kollective SD ECDN)",
     "imageSKU" : "kollectiveecdntestflight",
     "dnsUniqueString" : "[uniqueString(resourceGroup().id, deployment().name)]",
     "deployments-api-version" : "2015-01-01",
