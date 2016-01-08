@@ -423,11 +423,6 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName1'))]"
       ],
       "properties": {
-        "plan": {
-          "name": "[variables('imageSKU')]",
-          "publisher": "[variables('imagePublisher')]",
-          "product": "[variables('imageOffer')]"
-        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
@@ -471,11 +466,6 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName2'))]"
       ],
       "properties": {
-        "plan": {
-          "name": "[variables('imageSKU')]",
-          "publisher": "[variables('imagePublisher')]",
-          "product": "[variables('imageOffer')]"
-        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
@@ -519,11 +509,6 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName3'))]"
       ],
       "properties": {
-        "plan": {
-          "name": "[variables('imageSKU')]",
-          "publisher": "[variables('imagePublisher')]",
-          "product": "[variables('imageOffer')]"
-        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
