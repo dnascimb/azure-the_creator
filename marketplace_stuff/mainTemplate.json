@@ -73,15 +73,10 @@
     }
   },
   "variables": {
-    "imagePublisher": "MicrosoftWindowsServer",
-    "imageOffer": "WindowsServer",
-    "imageSKU": "2012-R2-Datacenter",
-
-    "imagePublisherX" : "kollective",
-    "imageOfferX" : "sd-ecdn-test-flight-vm",
-    "imageSKUX" : "kollectiveecdntestflight",
-
-    "dnsUniqueString" : "[uniquestring(resourceGroup().id, deployment().name)]",
+    "imagePublisher" : "kollective",
+    "imageOffer" : "sd-ecdn-test-flight-vm",
+    "imageSKU" : "kollectiveecdntestflight",
+    "dnsUniqueString" : "[uniqueString(resourceGroup().id, deployment().name)]",
     "deployments-api-version" : "2015-01-01",
     "storage-api-version" : "2015-06-15",
     "publicIPAddresses-api-version" : "2015-06-15",
@@ -428,6 +423,11 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName1'))]"
       ],
       "properties": {
+        "plan": {
+          "name": "[variables('imageSKU')]",
+          "publisher": "[variables('imagePublisher')]",
+          "product": "[variables('imageOffer')]"
+        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
@@ -471,6 +471,11 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName2'))]"
       ],
       "properties": {
+        "plan": {
+          "name": "[variables('imageSKU')]",
+          "publisher": "[variables('imagePublisher')]",
+          "product": "[variables('imageOffer')]"
+        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
@@ -514,6 +519,11 @@
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName3'))]"
       ],
       "properties": {
+        "plan": {
+          "name": "[variables('imageSKU')]",
+          "publisher": "[variables('imagePublisher')]",
+          "product": "[variables('imageOffer')]"
+        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
