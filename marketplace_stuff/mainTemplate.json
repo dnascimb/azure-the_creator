@@ -74,7 +74,7 @@
   },
   "variables": {
     "imagePublisher" : "Kollective",
-    "imageOffer" : "sd-ecdn-test-flight-vm-preview",
+    "imageOffer" : "sd-ecdn-test-flight-vm",
     "imageSKU" : "kollectiveecdntestflight",
     "dnsUniqueString" : "[uniqueString(resourceGroup().id, deployment().name)]",
     "deployments-api-version" : "2015-01-01",
