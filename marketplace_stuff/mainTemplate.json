@@ -417,17 +417,17 @@
       "apiVersion": "[variables('virtualMachines-api-version')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[variables('vmName1')]",
+      "plan": {
+        "name": "[variables('imageSKU')]",
+        "publisher": "[variables('imagePublisher')]",
+        "product": "[variables('imageOffer')]"
+      },
       "location": "[parameters('location')]",
       "dependsOn": [
         "storageAccountSetup",
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName1'))]"
       ],
       "properties": {
-        "plan": {
-          "name": "[variables('imageSKU')]",
-          "publisher": "[variables('imagePublisher')]",
-          "product": "[variables('imageOffer')]"
-        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
@@ -465,17 +465,17 @@
       "apiVersion": "[variables('virtualMachines-api-version')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[variables('vmName2')]",
+      "plan": {
+        "name": "[variables('imageSKU')]",
+        "publisher": "[variables('imagePublisher')]",
+        "product": "[variables('imageOffer')]"
+      },
       "location": "[parameters('location')]",
       "dependsOn": [
         "storageAccountSetup",
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName2'))]"
       ],
       "properties": {
-        "plan": {
-          "name": "[variables('imageSKU')]",
-          "publisher": "[variables('imagePublisher')]",
-          "product": "[variables('imageOffer')]"
-        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
@@ -513,17 +513,17 @@
       "apiVersion": "[variables('virtualMachines-api-version')]",
       "type": "Microsoft.Compute/virtualMachines",
       "name": "[variables('vmName3')]",
+      "plan": {
+        "name": "[variables('imageSKU')]",
+        "publisher": "[variables('imagePublisher')]",
+        "product": "[variables('imageOffer')]"
+      },
       "location": "[parameters('location')]",
       "dependsOn": [
         "storageAccountSetup",
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName3'))]"
       ],
       "properties": {
-        "plan": {
-          "name": "[variables('imageSKU')]",
-          "publisher": "[variables('imagePublisher')]",
-          "product": "[variables('imageOffer')]"
-        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
