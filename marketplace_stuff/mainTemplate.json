@@ -74,7 +74,7 @@
   },
   "variables": {
     "imagePublisher" : "Kollective",
-    "imageOffer" : "sd-ecdn-test-flight-vm-preview",
+    "imageOffer" : "sd-ecdn-test-flight-vm",
     "imageSKU" : "kollectiveecdntestflight",
     "dnsUniqueString" : "[uniqueString(resourceGroup().id, deployment().name)]",
     "deployments-api-version" : "2015-01-01",
@@ -420,7 +420,7 @@
       "plan": {
         "name": "[variables('imageSKU')]",
         "publisher": "[variables('imagePublisher')]",
-        "product": "sd-ecdn-test-flight-vm"
+        "product": "[variables('imageOffer')]"
       },
       "location": "[parameters('location')]",
       "dependsOn": [
@@ -468,7 +468,7 @@
       "plan": {
         "name": "[variables('imageSKU')]",
         "publisher": "[variables('imagePublisher')]",
-        "product": "sd-ecdn-test-flight-vm"
+        "product": "[variables('imageOffer')]"
       },
       "location": "[parameters('location')]",
       "dependsOn": [
@@ -516,7 +516,7 @@
       "plan": {
         "name": "[variables('imageSKU')]",
         "publisher": "[variables('imagePublisher')]",
-        "product": "sd-ecdn-test-flight-vm"
+        "product": "[variables('imageOffer')]"
       },
       "location": "[parameters('location')]",
       "dependsOn": [
