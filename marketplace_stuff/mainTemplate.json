@@ -73,7 +73,7 @@
     }
   },
   "variables": {
-    "imagePublisher" : "Kollective",
+    "imagePublisher" : "kollective",
     "imageOffer" : "sd-ecdn-test-flight-vm-preview",
     "imageSKU" : "kollectiveecdntestflight",
     "dnsUniqueString" : "[uniqueString(resourceGroup().id, deployment().name)]",
