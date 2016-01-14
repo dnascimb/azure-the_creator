@@ -74,7 +74,7 @@
   },
   "variables": {
     "imagePublisher" : "kollective",
-    "imageOffer" : "sd-ecdn-test-flight-vm-preview",
+    "imageOffer" : "sd-ecdn-test-flight-vm",
     "imageSKU" : "kollectiveecdntestflight",
     "dnsUniqueString" : "[uniqueString(resourceGroup().id, deployment().name)]",
     "deployments-api-version" : "2015-01-01",
@@ -441,7 +441,7 @@
             "publisher": "[variables('imagePublisher')]",
             "offer": "[variables('imageOffer')]",
             "sku": "[variables('imageSKU')]",
-            "version": "1.0.0"
+            "version": "latest"
           },
           "osDisk": {
             "name": "osdisk",
@@ -489,7 +489,7 @@
             "publisher": "[variables('imagePublisher')]",
             "offer": "[variables('imageOffer')]",
             "sku": "[variables('imageSKU')]",
-            "version": "1.0.0"
+            "version": "latest"
           },
           "osDisk": {
             "name": "osdisk",
@@ -537,7 +537,7 @@
             "publisher": "[variables('imagePublisher')]",
             "offer": "[variables('imageOffer')]",
             "sku": "[variables('imageSKU')]",
-            "version": "1.0.0"
+            "version": "latest"
           },
           "osDisk": {
             "name": "osdisk",
