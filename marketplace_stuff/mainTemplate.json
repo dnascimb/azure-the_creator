@@ -105,7 +105,7 @@
     "loadBalName2": "[concat(parameters('clusterNamePrefix'),'-lb2')]",
     "loadBalName3": "[concat(parameters('clusterNamePrefix'),'-lb3')]",
 
-    "storageAccountSetupURL" : "[uri(deployment().properties.templateLink.uri, concat('storageAccount-', parameters('storageAccountNewOrExisting'), '.json'))]",
+    "storageAccountSetupURL" : "[uri(deployment().properties.templateLink.uri, concat('storageAccount-', parameters('storageAccountNewOrExisting'), '.json'))]"
   },
   "resources": [
     {
