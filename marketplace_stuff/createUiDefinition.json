@@ -7,7 +7,7 @@
                 "name": "clusterNamePrefix",
                 "type": "Microsoft.Common.TextBox",
                 "label": "Cluster name prefix",
-                "toolTip": "This will be used to create the three VM names, Public IP names, NIC names, Load Balancer names, and Virtual Network name: Using the default prefix {TestFlight} would make the VM names = TestFlightVm1 TestFlightVm2 TestFlightVm3 ",
+                "toolTip": "This will be used to create the three VM names, NIC names, Load Balancer names, and Virtual Network name: Using the default prefix {TestFlight} would make the VM names = TestFlightVm1 TestFlightVm2 TestFlightVm3 ",
                 "defaultValue": "TestFlight",
                 "constraints": {
                     "required": true,
@@ -58,7 +58,13 @@
                         "label": "Select or create a storage account",
                         "toolTip": "The three Virtual Hard Disks (VHDs) for the VMs will be stored in the 'vhds' blob folder of this storage account.",
                         "constraints": {
-                            "required": true
+                            "required": true,
+                            "allowedTypes": [
+                                "Standard_LRS",
+                                "Standard_GRS",
+                                "Standard_RAGRS",
+                                "Standard_ZRS"
+                                ]
                         },
                         "defaultValue": {
                             "type": "Standard_LRS"
@@ -93,15 +99,28 @@
                         "count": 3
                     },
                     {
-                        "name": "publicDnsNamePrefix",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Public DNS prefix:",
-                        "toolTip": "The public DNS prefix will be combined with a generated 13-character unique string to create all three VM public DNS entries [dnsprefix][uniquestring]-vm1. Example of resulting Fully Qualified DNS: (e.g. [dnsprefix][uniquestring]-vm1.region.cloudapp.azure.com)",
-                        "defaultValue": "test-flight",
+                        "name": "ipDNSinfo",
+                        "type": "Microsoft.Network.PublicIpAddressCombo",
+                        "label": {
+                            "publicIpAddress": "Public IP address",
+                            "domainNameLabel": "Domain name label"
+                        },
+                        "toolTip": {
+                            "publicIpAddress": "A new IP address is recommended, unless you have a specific need to use an existing one.",
+                            "domainNameLabel": "The DNS label will be used for the fully qualified DNS for the three VMs and needs to be unique to azure."
+                        },
+                            "defaultValue": {
+                            "publicIpAddressName": "TestFlight-pubIp",
+                            "domainNameLabel": ""
+                        },
                         "constraints": {
-                            "required": true,
-                            "regex": "^[a-z][a-z0-9-]{1,40}$",
-                            "validationMessage": "Only lower-case alphanumeric characters and hyphen are allowed (no spaces). It must begin with a letter. The length must be shorter than 40 characters."
+                            "required": {
+                                "domainNameLabel": true
+                            }
+                        },
+                        "options": {
+                            "hideNone": true,
+                            "hideDomainNameLabel": false
                         }
                     }
                 ]
@@ -116,7 +135,10 @@
             "storageAccountName": "[steps('infrastructureConfig').storageAccount.name]",
             "storageAccountType": "[steps('infrastructureConfig').storageAccount.type]",
             "existingStorageAccountRG": "[steps('infrastructureConfig').storageAccount.resourceGroup]",
-            "publicDnsNamePrefix": "[steps('infrastructureConfig').publicDnsNamePrefix]",
+            "dnsNameForPublicIP": "[steps('infrastructureConfig').ipDNSinfo.domainNameLabel]",
+            "publicIPAddressName": "[steps('infrastructureConfig').ipDNSinfo.name]",
+            "existingIPRGName": "[steps('infrastructureConfig').ipDNSinfo.resourceGroup]",
+            "publicIPNewOrExisting": "[steps('infrastructureConfig').ipDNSinfo.newOrExistingOrNone]",
             "vmSize": "[steps('infrastructureConfig').vmSize]"
         }
     }
