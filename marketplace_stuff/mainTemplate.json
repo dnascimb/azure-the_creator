@@ -321,7 +321,7 @@
     {
       "apiVersion": "[variables('virtualMachines-api-version')]",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(variables('vmNamePrefix'), , copyIndex(1))]",
+      "name": "[concat(variables('vmNamePrefix'), copyIndex(1))]",
       "plan": {
         "name": "[variables('imageSKU')]",
         "publisher": "[variables('imagePublisher')]",
