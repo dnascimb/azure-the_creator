@@ -122,6 +122,7 @@
     "loadBalancers-api-version" : "2015-06-15",
     "networkInterfaces-api-version" : "2015-06-15",
     "virtualMachines-api-version" : "2015-06-15",
+    "availabilitySets-api-version" : "2015-06-15",
     "vnetName": "[concat(parameters('clusterNamePrefix'),'-vnet')]",
     "vnetAddressRange": "10.0.0.0/16",
     "subnetAddressRange": "10.0.0.0/24",
@@ -131,6 +132,7 @@
     "vmNamePrefix" : "[concat(parameters('clusterNamePrefix'),'Vm')]",
     "nicNamePrefix": "[concat(parameters('clusterNamePrefix'),'-nic')]",
     "loadBalName": "[concat(parameters('clusterNamePrefix'),'-lb')]",
+    "availabilitySetName": "[concat(parameters('clusterNamePrefix'),'-avSet')]",
     "storageAccountSetupURL" : "[concat(parameters('baseUrl'),'/storageAccount-',parameters('storageAccountNewOrExisting'),'.json')]",
     "publicIPAddressSetupURL" : "[concat(parameters('baseUrl'),'/publicip-',parameters('publicIPNewOrExisting'),'.json')]"
   },
@@ -196,6 +198,13 @@
         }
       }
     },
+    {
+      "type": "Microsoft.Compute/availabilitySets",
+      "name": "[variables('availabilitySetName')]",
+      "apiVersion": "[variables('availabilitySets-api-version')]",
+      "location": "[parameters('location')]",
+      "properties": {}
+    },    
     {
       "apiVersion": "[variables('virtualNetworks-api-version')]",
       "type": "Microsoft.Network/virtualNetworks",
@@ -334,9 +343,13 @@
       "location": "[parameters('location')]",
       "dependsOn": [
         "storageAccountSetup",
-        "[concat('Microsoft.Network/networkInterfaces/', variables('nicNamePrefix'), copyIndex(1))]"
+        "[concat('Microsoft.Network/networkInterfaces/', variables('nicNamePrefix'), copyIndex(1))]",
+        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
       ],
       "properties": {
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets',variables('availabilitySetName'))]"
+        },
         "hardwareProfile": {
           "vmSize": "[parameters('vmSize')]"
         },
@@ -378,19 +391,19 @@
     },
     "DnsName": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn]"
+      "value": "[reference('publicIPSetup').outputs.fqdn.value]"
     },
     "VM1_RDP_Address": {
       "type": "string",
-      "value": "[concat(reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn, ':50001')]"
+      "value": "[concat(reference('publicIPSetup').outputs.fqdn.value, ':50001')]"
     },
     "VM2-RDP_Address": {
       "type": "string",
-      "value": "[concat(reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn, ':50002')]"
+      "value": "[concat(reference('publicIPSetup').outputs.fqdn.value, ':50002')]"
     },
     "VM3-RDP_Address": {
       "type": "string",
-      "value": "[concat(reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn, ':50003')]"
+      "value": "[concat(reference('publicIPSetup').outputs.fqdn.value, ':50003')]"
     }
   }
 }
