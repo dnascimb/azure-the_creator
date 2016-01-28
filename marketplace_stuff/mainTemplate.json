@@ -34,12 +34,6 @@
         "description": "Size of the VM"
       }
     },
-    "publicDnsNamePrefix": {
-      "type": "string",
-      "metadata": {
-        "description": "Public DNS prefix for the deployment. The fqdn will look something like '<dnsprefix><unique-string>-vm1.westus.cloudapp.azure.com'."
-      }
-    },
     "storageAccountName": {
       "type": "string",
       "metadata": {
