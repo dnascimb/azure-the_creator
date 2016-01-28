@@ -240,7 +240,7 @@
             "name": "LBFE",
             "properties": {
               "publicIPAddress": {
-                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIPAddressName'))]"
+                "id": "[reference('publicIPSetup').outputs.publicIpId.value]"
               }
             }
           }
