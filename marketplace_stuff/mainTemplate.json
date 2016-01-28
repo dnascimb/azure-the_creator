@@ -378,19 +378,19 @@
     },
     "DnsName": {
       "type": "string",
-      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pubIpName')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn]"
+      "value": "[reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn]"
     },
     "VM1_RDP_Address": {
       "type": "string",
-      "value": "[concat(reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pubIpName')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn, ':50001')]"
+      "value": "[concat(reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn, ':50001')]"
     },
     "VM2-RDP_Address": {
       "type": "string",
-      "value": "[concat(reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pubIpName')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn, ':50002')]"
+      "value": "[concat(reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn, ':50002')]"
     },
     "VM3-RDP_Address": {
       "type": "string",
-      "value": "[concat(reference(resourceId('Microsoft.Network/publicIPAddresses', variables('pubIpName')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn, ':50003')]"
+      "value": "[concat(reference(resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName')), variables('publicIPAddresses-api-version')).dnsSettings.fqdn, ':50003')]"
     }
   }
 }
