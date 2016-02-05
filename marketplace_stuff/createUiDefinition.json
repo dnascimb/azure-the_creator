@@ -130,7 +130,7 @@
             "location": "[location()]",
             "clusterNamePrefix": "[basics('clusterNamePrefix')]",
             "adminUsername": "[basics('adminUsername')]",
-            "adminPassword": "[basics('adminPassword')]",
+            "adminPassword": "[basics('adminPassword').password]",
             "storageAccountNewOrExisting" : "[steps('infrastructureConfig').storageAccount.newOrExisting]",
             "storageAccountName": "[steps('infrastructureConfig').storageAccount.name]",
             "storageAccountType": "[steps('infrastructureConfig').storageAccount.type]",
