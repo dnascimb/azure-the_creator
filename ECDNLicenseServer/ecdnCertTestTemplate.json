@@ -1,0 +1,197 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "West US",
+      "metadata": {
+        "description": "The region to deploy the resources into"
+      }
+    },
+    "publicDnsName1": {
+      "type": "string",
+      "defaultValue": "ecdn-certtestvm",
+      "metadata": {
+        "description": "Unique public DNS prefix for the deployment. The fqdn will look something like '<dnsname>.westus.cloudapp.azure.com'. Up to 62 chars, digits or dashes, lowercase, should start with a letter: must conform to '^[a-z][a-z0-9-]{1,61}[a-z0-9]$'."
+      }
+    },
+    "vmName1": {
+      "type": "string",
+      "defaultValue": "ECDNCertTestVM",
+      "metadata": {
+        "description": "The VM for testing Certification"
+      }
+    },
+    "adminUsername": {
+      "type": "string",
+      "defaultValue": "kuser",
+      "metadata": {
+        "description": "The name of the administrator of the new VM. Exclusion list: 'admin','administrator'"
+      }
+    },
+    "adminPassword": {
+      "type": "securestring",
+      "defaultValue": "1Aaaaaaa",
+      "metadata": {
+        "description": "The password for the administrator account of the new VM"
+      }
+    },
+    "vaultName": {
+      "type": "string",
+      "defaultValue": "ECDNCertKeyVault",
+      "metadata": {
+        "description": "Name of the KeyVault"
+      }
+    },
+    "vaultResourceGroup": {
+      "type": "string",
+      "defaultValue": "ECDNKeyVaultRG",
+      "metadata": {
+        "description": "Resource Group of the KeyVault"
+      }
+    },
+    "certificateUrl": {
+      "type": "string",
+      "defaultValue": "https://ecdncertkeyvault.vault.azure.net:443/secrets/ECDNTestCert/4b7caf6a4fc14cb6b94d0f8cbedf19d7",
+      "metadata": {
+        "description": "Url of the certificate with version in KeyVault e.g. https://testault.vault.azure.net/secrets/testcert/b621es1db241e56a72d037479xab1r7"
+      }
+    }
+  },
+  "variables": {
+    "vnetName": "[concat(parameters('vmName1'),'-vnet')]",
+    "vnetAddressRange": "10.0.0.0/16",
+    "subnetAddressRange": "10.0.0.0/24",
+    "subnetName": "Subnet",
+    "subnet-id": "[concat(resourceId('Microsoft.Network/virtualNetworks',variables('vnetName')),'/subnets/',variables('subnetName'))]",
+    "pubIp1": "[concat(parameters('vmName1'),'-pubIp')]"
+  },
+  "resources": [
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('pubIp1')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "publicIPAllocationMethod": "Dynamic",
+        "dnsSettings": {
+          "domainNameLabel": "[parameters('publicDnsName1')]"
+        }
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/virtualNetworks",
+      "name": "[variables('vnetName')]",
+      "location": "[parameters('location')]",
+      "properties": {
+        "addressSpace": {
+          "addressPrefixes": [
+            "[variables('vnetAddressRange')]"
+          ]
+        },
+        "subnets": [
+          {
+            "name": "Subnet",
+            "properties": {
+              "addressPrefix": "[variables('subnetAddressRange')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Network/networkInterfaces",
+      "name": "[concat(parameters('vmName1'),'-nif')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+      ],
+      "properties": {
+        "ipConfigurations": [
+          {
+            "name": "ipconfig1",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses',variables('pubIp1'))]"
+              },
+              "subnet": {
+                "id": "[variables('subnet-id')]"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "apiVersion": "2015-06-15",
+      "type": "Microsoft.Compute/virtualMachines",
+      "name": "[parameters('vmName1')]",
+      "location": "[parameters('location')]",
+      "dependsOn": [
+        "[concat('Microsoft.Network/networkInterfaces/',parameters('vmName1'),'-nif')]"
+      ],
+      "properties": {
+        "hardwareProfile": {
+          "vmSize": "Basic_A1"
+        },
+        "osProfile": {
+          "computername": "[parameters('vmName1')]",
+          "adminUsername": "[parameters('adminUserName')]",
+          "adminPassword": "[parameters('adminPassword')]",
+          "secrets": [
+            {
+              "sourceVault": {
+                "id": "[resourceId(parameters('vaultResourceGroup'), 'Microsoft.KeyVault/vaults', parameters('vaultName'))]"
+              },
+              "vaultCertificates": [
+                {
+                  "certificateUrl": "[parameters('certificateUrl')]",
+                  "certificateStore": "My"
+                }
+              ]
+            }
+          ],
+          "windowsConfiguration": {
+            "provisionVMAgent": "true",
+            "winRM": {
+              "listeners": [
+                {
+                  "protocol": "http"
+                },
+                {
+                  "protocol": "https",
+                  "certificateUrl": "[parameters('certificateUrl')]"
+                }
+              ]
+            }
+          }
+        },
+        "storageProfile": {
+          "osDisk": {
+            "osType": "Windows",
+            "name": "osdisk",
+            "image": {
+              "uri": "https://vmdevelopmentstorage.blob.core.windows.net/system/Microsoft.Compute/Images/baseimage/ECDNLicenseVMBaseImage-osDisk.d0a872fb-d529-407e-8a42-a8a284c9f4c3.vhd"
+            },
+            "vhd": {
+              "uri": "[concat('http://vmdevelopmentstorage.blob.core.windows.net/vhds/',parameters('vmName1'),'-osdisk.vhd')]"
+            },
+            "caching": "ReadWrite",
+            "createOption": "FromImage"
+          }
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces',concat(parameters('vmName1'),'-nif'))]"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
