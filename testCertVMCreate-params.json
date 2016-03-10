@@ -3,7 +3,7 @@
     "value": "West US"
   },
   "storageAccount": {
-    "value": "tfmarketplacestorage"
+    "value": "testflightphase2"
   },
   "publicDnsName1": {
     "value": "kvm1-tftestcertvm1"
@@ -24,7 +24,7 @@
     "value": "kuser-root"
   },
   "adminPassword": {
-    "value": "38Fd3jlc327"
+    "value": "1Aaaaaaa"
   },
   "rdpPort": {
     "value": 50001
